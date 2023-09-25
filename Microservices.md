@@ -27,7 +27,12 @@ Microservices are typically built using modern technologies such as containers a
 ![img.png](img.png)
 
 ### Why are microservices becoming popular?
-Microservices offer a number of benefits over traditional monolithic architectures — ● They allow for faster development and deployment, as each service can be developed and deployed independently. ● They also make it easier to scale and manage an application, as each service can be scaled independently. ● Additionally, microservices make it easier to implement new technologies and handle changes in business requirements. ● Microservices also provide flexibility and allows for different teams to work on different services independently and also promotes reuse of services. ● Microservices also provide fault isolation, as a failure in one service will not bring down the entire system.
+Microservices offer a number of benefits over traditional monolithic architectures 
+1. They allow for faster development and deployment, as each service can be developed and deployed independently. 
+2. They also make it easier to scale and manage an application, as each service can be scaled independently. 
+3. Additionally, microservices make it easier to implement new technologies and handle changes in business requirements. 
+4. Microservices also provide flexibility and allows for different teams to work on different services independently and also promotes reuse of services. 
+5. Microservices also provide fault isolation, as a failure in one service will not bring down the entire system.
 
 ### Design Principles for building Microservices
 The key principles that should be considered when designing and building microservices.
