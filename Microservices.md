@@ -1,14 +1,14 @@
 # Microservices Architecture
 ### Agenda
 
-- What are microservices and Why are they becoming popular \
-- Design Principles for Building Microservices \
-- Microservices Architecture in Practice \
-- Best Practices \
-- Communication Between Microservices \
-- Service Discovery And Registration \
-- API Gateway \
-- Deployment and Scaling \
+- What are microservices and Why are they becoming popular 
+- Design Principles for Building Microservices 
+- Microservices Architecture in Practice 
+- Best Practices 
+- Communication Between Microservices 
+- Service Discovery And Registration 
+- API Gateway 
+- Deployment and Scaling 
 
 ### What are microservices? 
 <b>Microservices</b> are a software architecture style in which a large application is broken down into smaller, independently deployable services. An architecture style refers to a set of guidelines, principles, and patterns for designing and building software systems. It provides a framework for organizing and structuring the different components and modules of a system, as well as for specifying how those components and modules interact with each other. Different architecture styles have different characteristics and are suited to different types of systems and use cases. Some examples of architecture styles include:
@@ -49,29 +49,29 @@ Designing an e-commerce application using microservices architecture requires a 
 **Implement Service discovery and Registration:** Use a service discovery and registration mechanism to allow microservices to discover and communicate with other services in the system. \
 **Implement monitoring and logging:** Implement monitoring and logging to make it easier to identify and troubleshoot issues. Consider using tools such as Prometheus and ELK stack (Elastic search, Logstash, Kibana). \
 **Test and deploy the services:** Test each service individually, and deploy them to a production environment using containerization and orchestration tools like Docker and Kubernetes. \
-**Scalability:** Scale up or down the services independently based on the traffic and resource requirements.\
+**Scalability:** Scale up or down the services independently based on the traffic and resource requirements.
 
 ### Best Practices
 
-1. Communication between microservices should be done over a lightweight protocol, such as HTTP or gRPC. \
-2. Services should be designed to be fault-tolerant, to handle communication failures. Fault tolerance is a way for microservices to handle the unavailability of a service by using different stability patterns. There are many stability patterns which have been used to achieve robustness and resilience including Circuit Breaker Pattern, Timeout Pattern, and Retry Pattern etc. \
-3. Services should be designed to handle high-throughput and low-latency communication. \
-4. Services should be designed to handle different types of requests, such as query and command requests. For example, CQRS i.e. Command Query Responsibility Segregations. \
+1. Communication between microservices should be done over a lightweight protocol, such as HTTP or gRPC. 
+2. Services should be designed to be fault-tolerant, to handle communication failures. Fault tolerance is a way for microservices to handle the unavailability of a service by using different stability patterns. There are many stability patterns which have been used to achieve robustness and resilience including Circuit Breaker Pattern, Timeout Pattern, and Retry Pattern etc. 
+3. Services should be designed to handle high-throughput and low-latency communication. 
+4. Services should be designed to handle different types of requests, such as query and command requests. For example, CQRS i.e. Command Query Responsibility Segregations. 
 5. Services should be designed to handle different types of data, such as text and binary data.
 
 ### Communication Between Microservices In a Distributed System
 Below are the different options and best practices for communicating between microservices in a distributed system.
 
-**Synchronous Communication** : Synchronous communication is when a service sends a request to another service and waits for a response. ● This is the most common form of communication between microservices. 
+**Synchronous Communication** : Synchronous communication is when a service sends a request to another service and waits for a response. This is the most common form of communication between microservices. 
 - Synchronous communication include REST and gRPC.
 
-**Asynchronous Communication** : Asynchronous communication is when a service sends a request to another service without waiting for a response.  This can be useful for handling tasks that are time-consuming or can be performed offline. \
+**Asynchronous Communication** : Asynchronous communication is when a service sends a request to another service without waiting for a response.  This can be useful for handling tasks that are time-consuming or can be performed offline. 
 - Asynchronous communication include message queues and event-driven architectures.
 
-**API Gateway** : An API Gateway is a service that acts as an intermediary between the client and the microservices. It can be used to handle tasks such as authentication, rate limiting, and request routing.  This can help to reduce the load on the microservices and simplify communication between them. \ 
+**API Gateway** : An API Gateway is a service that acts as an intermediary between the client and the microservices. It can be used to handle tasks such as authentication, rate limiting, and request routing.  This can help to reduce the load on the microservices and simplify communication between them.  
 - Popular API gateways are Zuul Server and NGINX etc. 
 
-**Service Discovery and Registration** : Service Discovery and Registration is a mechanism that allows microservices to discover and communicate with other services in the system. \
+**Service Discovery and Registration** : Service Discovery and Registration is a mechanism that allows microservices to discover and communicate with other services in the system. 
 - Service discovery and registration include Netflix Eureka and Consul.
 
 ### Communicating between the Microservices
