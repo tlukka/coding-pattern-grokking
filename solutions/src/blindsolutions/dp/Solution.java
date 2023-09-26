@@ -46,45 +46,220 @@ public class Solution {
         System.out.println("Result: " + sl.findRecords(list, startDate2, endDate2));
         System.out.println("Result: " + sl.formatLog(list, startDate2, endDate2));
 
-         */
 
-        int[][] nodes =  {{7,11}, {5,11}, {3,8}, {11,2}, {11,9}, {8,9},{3,10}};
+
+        int[][] nodes = {{7, 11}, {5, 11}, {3, 8}, {11, 2}, {11, 9}, {8, 9}, {3, 10}};
         System.out.println(sl.findNodes(nodes, 2));
+
+         */
+        System.out.println(sl.numDecodings("226"));
+        System.out.println(sl.numDecodings("10011"));
+        System.out.println(sl.numDecodingsWithDp("226"));
+        System.out.println(sl.numDecodingsWithDp("10011"));
     }
 
-    // Design an ecommerce search auto complete suggestion. (Type ahead).
+    //  Decode Ways
+    // Given a string s containing only digits, return the number of ways to decode it.
+    int numDecodings(String s) {
+        int len = s.length();
+        if (s == null || len == 0) return 0;
+        int[] dp = new int[len + 1];
+        dp[0] = 1;
+        dp[1] = s.charAt(0) != '0' ? 1 : 0;
+        for (int i = 2; i <= len; i++) {
+            int first = Integer.valueOf(s.substring(i - 1, i));
+            int second = Integer.valueOf(s.substring(i - 2, i));
+            if (first >= 1 && first <= 9)
+                dp[i] += dp[i - 1];
+            if (second >= 10 && second <= 26)
+                dp[i] += dp[i - 2];
 
-    // https://leetcode.com/problems/top-k-frequent-words/
-    // Lowest Commen Ancestor for Binary Tree
-    //Lowest Commen Ancestor for Binary Search Tree
-    // https://leetcode.com/problems/first-missing-positive/
-    // https://leetcode.com/problems/group-anagrams/
-    // https://leetcode.com/problems/subarray-sum-equals-k/
-    // https://leetcode.com/problems/merge-k-sorted-lists/
-    // Given a adjucency list: (users -> list of friends), return the shortest friend-path between two users.
-    // https://leetcode.com/problems/longest-substring-without-repeating-characters/
-    // Given this tree, Not necessarily it is a binary tree ( A node can have any number of children nodes).
-    // Return a list that is in the reverse order. (https://leetcode.com/problems/binary-tree-level-order-traversal/)
-    // https://leetcode.com/problems/n-ary-tree-level-order-traversal/
-    // https://leetcode.com/problems/least-number-of-unique-integers-after-k-removals/
-    // Randomize an array in place. (https://leetcode.com/problems/shuffle-an-array/)
-    // Problem: You are given an array of n integers, sort the array in ascending order first by their frequency then by their value.
-        //Similar LC Problem: Sort Array by Increasing Frequency
-        //Sample Input: [3, 4, 5, 6, 4, 3]
-        //Sample Output: [5, 6, 3, 3, 4, 4]
-    // Suppose we have an api to put list of names in the DB. It's only responsibility is to put data in DB.
-    // Once the DB starts to grow it starts to have higher latency. How'd you proceed to find the problem in the system.
-    //https://leetcode.com/problems/valid-parentheses/
-    // https://leetcode.com/problems/find-median-from-data-stream/description/
+        }
+        return dp[len];
+    }
+
+    int numDecodingsWithDp(String s) {
+        int len = s.length();
+        if (s == null || len == 0) return 0;
+        int[] dp = new int[len + 1];
+        dp[len] = 1;
+        for (int i = len - 1; i >= 0; i--) {
+            if (s.charAt(i) == '0') {
+                dp[i] = 0;
+            } else {
+                dp[i] = dp[i + 1];
+                if (i < len - 1 && (s.charAt(i) == '1' || s.charAt(i) == '2' && s.charAt(i + 1) <= '6')) {
+                    dp[i] += dp[i + 2];
+                }
+            }
+        }
+        return dp[0];
+    }
 
 
+    // House Robber
+    // Given an integer array nums representing the amount of money of each house,
+    // constraint stopping you from robbing each of them is that adjacent houses
+    // return the maximum amount of money you can rob tonight without alerting the police.
+
+    int robCircularHouse(int[] nums) {
+        if (nums == null || nums.length == 0) return 0;
+        int len = nums.length;
+        if (len == 1) return nums[0];
+        if (len == 2) return Math.max(nums[0], nums[1]);
+        return Math.max(robHouse1(nums, 0, len - 2), robHouse1(nums, 1, len - 1));
+    }
+
+    int robHouse1(int[] nums, int start, int end) {
+        int prev = nums[start];
+        int rob = Math.max(nums[start], nums[start + 1]);
+        for (int i = start + 2; i <= end; i++) {
+            int currRob = Math.max(rob, prev + nums[i]);
+            prev = rob;
+            rob = currRob;
+        }
+
+        return rob;
+    }
+
+    int robHouseWithOutSpace(int[] nums) {
+        if (nums == null || nums.length == 0) return 0;
+        if (nums.length == 1) return nums[0];
+        if (nums.length == 2) return Math.max(nums[0], nums[1]);
+        int prev = nums[0];
+        int rob = Math.max(nums[0], nums[1]);
+
+        for (int i = 2; i < nums.length; i++) {
+            int currRob = Math.max(rob, prev + nums[i]);
+            prev = rob;
+            rob = currRob;
+        }
+        return rob;
+    }
+
+    int robHouse1(int[] nums) {
+        if (nums == null || nums.length == 0) return 0;
+        if (nums.length == 1) return nums[0];
+        if (nums.length == 2) return Math.max(nums[0], nums[1]);
+        int[] dp = new int[nums.length + 1];
+        dp[0] = nums[0];
+        dp[1] = Math.max(nums[0], nums[1]);
+
+        for (int i = 2; i < nums.length; i++) {
+            dp[i] = Math.max(nums[i] + dp[i - 2], dp[i - 1]);
+        }
+
+        return dp[nums.length - 1];
+    }
+
+    // Given an array of distinct integers nums and a target integer target, return the number of
+    // possible combinations that add up to target.
+    int combinationSum4(int[] nums, int target) {
+        int[] dp = new int[target + 1];
+        dp[0] = 1; // base case with 1
+        for (int i = 1; i <= target; i++) {
+            for (int num : nums) {
+                if (i >= num) {
+                    dp[i] += dp[i - num];
+                }
+            }
+        }
+
+        return dp[target];
+    }
+
+    // Unique Paths
+    int uniquePathMoveByRobotWithRecursion(int m, int n) {
+        if (m == 1 || n == 1)
+            return 1;
+        return uniquePathMoveByRobotWithRecursion(m, n - 1) + uniquePathMoveByRobotWithRecursion(m - 1, n);
+    }
+
+    int uniquePathDp(int m, int n) {
+        int[][] grid = new int[m][n];
+        for (int[] arr : grid)
+            Arrays.fill(arr, 1); // set first row and column as 1;
+        for (int r = 1; r < m; r++) {
+            for (int c = 1; c < n; c++) {
+                grid[r][c] = grid[r - 1][c] + grid[r][c - 1];
+            }
+        }
+        return grid[m - 1][n - 1];
+    }
+
+    // You are given an integer array nums. You are initially positioned at the array's first index,
+    // and each element in the array represents your maximum jump length at that position.
+    //Return true if you can reach the last index, or false otherwise.
+    // i/p : nums = [2,3,1,1,4] -> o/p: true , [3,2,1,0,4] -> o/p: false
+    boolean canJumpWithReverse(int[] nums) {
+        int lastPosition = nums.length - 1;
+        for (int i = nums.length - 1; i >= 0; i--) {
+            if (nums[i] + i >= lastPosition) {
+                lastPosition = i;
+            }
+        }
+
+        return lastPosition == 0;
+    }
+
+    boolean canJump(int[] nums) {
+        int reachable = 0;
+        for (int i = 0; i < nums.length && i <= reachable; i++) {
+            reachable = Math.max(reachable, i + nums[i]);
+            if (reachable >= nums.length - 1)
+                return true;
+        }
+        return false;
+    }
+
+    // Array is divided into four sub arrays consecutively named A,B,C,D in such a way that
+    //"Sum(A) - Sum(B) + Sum(C) - Sum(D)" is maximum.These subarrays sizes can be '0' also in some cases
+    // as listed in below(Array has both positive and negative elements) Can anyone share a detailed coded
+    // solution and its logic ?
+    //Example: ar = {-1,-2,-3,1,2,3}
+    //A={ } , B={-1,-2,-3} , C={1,2,3} , D={ }
+    //Output: maximum sum possible for the above expression is "1+2+3+1+2+3+ = 12"
+
+    int fourPartsMax(int[] A) {
+        int n = A.length;
+        int[] nums = new int[n + 1];
+        int m = nums.length;
+        //padding extra 0 to deal with the 4th subarry is empty, make it easy coding
+        nums[n] = 0;
+        for (int i = 0; i < n; i++) {
+            nums[i] = A[i];
+        }
+        int[][] dp = new int[5][m + 1];
+        int[] sum = new int[m + 1];
+        //init
+        for (int i = 1; i <= m; i++) {
+            sum[i] = sum[i - 1] + nums[i - 1];
+            dp[1][i] = sum[i];
+        }
+        //dp[i][j] := the maximum result can be formed using first j elements partitoned  into i parts
+        // dp[i][j] = max(dp[i - 1][k] - sum(k, j)) i == 2 || i == 4;
+        //          = max(dp[i - 1][k] + sum(k, j)) i == 3;
+        for (int i = 2; i <= 4; i++) {
+            for (int j = 0; j <= m; j++) {
+                dp[i][j] = Integer.MIN_VALUE;
+                // k starts with 0, means this partition can be empty,
+                for (int k = 0; k <= j; k++) {
+                    if (i == 2 || i == 4) {
+                        dp[i][j] = Math.max(dp[i][j], dp[i - 1][k] - (sum[j] - sum[k]));
+                    }
+                    if (i == 3) {
+                        dp[i][j] = Math.max(dp[i][j], dp[i - 1][k] + (sum[j] - sum[k]));
+                    }
+                }
+            }
+        }
+        return dp[4][m];
+    }
 
     //To design algorithm to find dependencies of a specific node.
     // Say for exampe there is an input stream 2d array in which nodes are
     // given as [[7,11], [5,11], [3,8], [11,2], [11,9], [8,9],[3,10]] . Now for a given node say 2,
     // the output should be [7,5,11,2] or [5,7,11,2]. Instead of numbers I was given characters.
-
-
     List<Integer> findNodes(int[][] nodes, int startNode) {
         List<Integer> res = new ArrayList<>();
         Map<Integer, Set<Integer>> map = new HashMap<>();

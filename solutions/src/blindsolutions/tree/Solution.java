@@ -1,8 +1,10 @@
 package blindsolutions.tree;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 
 public class Solution {
@@ -38,6 +40,48 @@ public class Solution {
             }
         }
         return parents;
+    }
+
+    // Find all the paths that sum to a given value.
+    //
+    //The path does not need to start or end at the root or a leaf, but it must go downwards
+    // (traveling only from parent nodes to child nodes).
+
+    //Example:
+
+    //      10
+    //     /  \
+    //    5   -3
+    //   / \    \
+    //  3   2   11
+    // / \   \
+    //3  -2   1
+
+    //Return: [[5, 3], [5, 2, 1], [-3, 11]]
+    List<List<Integer>> paths = new ArrayList<>();
+    public List<List<Integer>> pathSum(TreeNode root, int sum) {
+        Map<Integer, List<Integer>> map = new HashMap<>();
+        map.put(0, new ArrayList<>());
+        pathSum(root, 0, sum, new ArrayList<>(), map);
+        return paths;
+    }
+
+    private void pathSum(TreeNode root, int currSum, int target, List<Integer> currList, Map<Integer, List<Integer>> map) {
+        if (root == null)
+            return;
+
+        currSum += root.val;
+        currList.add(root.val);
+        if (map.containsKey(currSum - target)) {
+            List<Integer> prevPath = map.get(currSum - target), temp = new ArrayList<>();
+            for (int i = prevPath.size(); i < currList.size(); i++)
+                temp.add(currList.get(i));
+            paths.add(temp);
+        }
+        map.put(currSum, new ArrayList<>(currList));
+        pathSum(root.left, currSum, target, currList, map);
+        pathSum(root.right, currSum, target, currList, map);
+        currList.remove(currList.size() - 1);
     }
 }
 

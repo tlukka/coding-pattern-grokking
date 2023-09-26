@@ -2,11 +2,26 @@ package blindsolutions.intervals;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
 
 public class Solution {
+
+    List<Interval> findFreeTime(List<Interval> meetings) {
+        meetings.sort(Comparator.comparingInt(a -> a.startTime));
+        List<Interval> freeTime = new ArrayList<>();
+        int endTime = 1;
+        for (Interval meeting : meetings) {
+            if (endTime < meeting.startTime) {
+                freeTime.add(new Interval(endTime, meeting.startTime));
+            }
+            endTime = Math.max(endTime, meeting.endTime);
+        }
+        freeTime.add(new Interval(endTime, 24));
+        return freeTime;
+    }
 
     Interval[] insertIntervals(Interval[] intervals, Interval newInterval) {
         List<Interval> result = new ArrayList<>();
@@ -121,13 +136,13 @@ public class Solution {
 
     // Minimum number of rooms
     int minMeetingRoom(Interval[] intervals) {
-        Arrays.sort(intervals, (a, b) -> a.startTime-b.startTime);
-        PriorityQueue<Interval> heap = new PriorityQueue<>((a,b) -> a.endTime-b.endTime);
+        Arrays.sort(intervals, (a, b) -> a.startTime - b.startTime);
+        PriorityQueue<Interval> heap = new PriorityQueue<>((a, b) -> a.endTime - b.endTime);
         heap.add(intervals[0]);
-        for(int i=1; i< intervals.length; i++) {
+        for (int i = 1; i < intervals.length; i++) {
             int endTime = heap.peek().endTime;
             int startTime = intervals[i].startTime;
-            if(endTime<=startTime) {
+            if (endTime <= startTime) {
                 heap.poll();
             }
         }
