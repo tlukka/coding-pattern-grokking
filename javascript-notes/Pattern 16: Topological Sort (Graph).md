@@ -18,7 +18,7 @@ Output: Following are the two valid topological sorts for the given graph:
 1) 3, 2, 0, 1
 2) 3, 2, 1, 0
 ````
-![](./images/topsort.png)
+![](../images/topsort.png)
 ### Example 2:
 ````js
 Input: Vertices=5, Edges=[4, 2], [4, 3], [2, 0], [2, 1], [3, 1]
@@ -29,7 +29,7 @@ Output: Following are all valid topological sorts for the given graph:
 4) 4, 2, 3, 1, 0
 5) 4, 2, 0, 3, 1
 ````
-![](./images/topsort2.png)
+![](../images/topsort2.png)
 ### Example 3:
 ````js
 Input: Vertices=7, Edges=[6, 4], [6, 2], [5, 3], [5, 4], [3, 0], [3, 1], [3, 2], [4, 1]
@@ -43,7 +43,7 @@ Output: Following are all valid topological sorts for the given graph:
 
 There are other valid topological ordering of the graph too.
 ````
-![](./images/topsort3.png)  
+![](../images/topsort3.png)  
 
 The basic idea behind the topological sort is to provide a partial ordering among the vertices of the graph such that if there is an edge from `U` to `V` then `U≤V` i.e., `U` comes before `V` in the ordering. 
 
@@ -72,7 +72,7 @@ To find the <i>topological sort</i> of a graph we can traverse the graph in a <b
 - Repeat for each source, until the source <b>Queue</b> is empty.
 
 Here is the visual representation of this algorithm for <b>Example 3</b>:
-![](./images/topsort4.png) 
+![](../images/topsort4.png) 
 
 This is how we can implement this algorithm:
 ````java
@@ -652,7 +652,7 @@ Output:[1, 2]
 Explanation: Choosing '1' or '2' as roots give us MHTs. In the below diagram, we can see that the 
 height of the trees with roots '1' or '2' is three which is minimum.
 ````
-![](./images/MHT1.png)
+![](../images/MHT1.png)
 ### Example 2:
 ````js
 Input: vertices: 4, Edges: [[0, 1], [0, 2], [2, 3]]
@@ -660,7 +660,7 @@ Output:[0, 2]
 Explanation: Choosing '0' or '2' as roots give us MHTs. In the below diagram, we can see that the 
 height of the trees with roots '0' or '2' is three which is minimum.
 ````
-![](./images/MHT2.png)
+![](../images/MHT2.png)
 ### Example 3:
 ````js
 Input: vertices: 4, Edges: [[0, 1], [1, 2], [1, 3]]

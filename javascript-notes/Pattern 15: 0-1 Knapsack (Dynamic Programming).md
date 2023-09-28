@@ -29,7 +29,7 @@ Before moving on to understand different methods of solving a <b>DP</b> problem,
 
 Subproblems are smaller versions of the original problem. Any problem has overlapping sub-problems if finding its solution involves solving the same subproblem multiple times. Take the example of the Fibonacci numbers; to find the `fib(4)`, we need to break it down into the following sub-problems:
 
-![](./images/fib4.png)
+![](../images/fib4.png)
 
 We can clearly see the overlapping subproblem pattern here, as `fib(2)` has been evaluated twice and `fib(1)` has been evaluated three times.
 
@@ -163,7 +163,7 @@ This shows that `Banana + Melon` is the best combination as it gives us the `max
 ### Basic Brute Force Soultion
 
 A basic <b>brute-force solution</b> could be to try all combinations of the given items (as we did above), allowing us to choose the one with `maximum profit` and a weight that doesn’t exceed `C`. Take the example of four items `A, B, C, and D`, as shown in the diagram below. To try all the combinations, our algorithm will look like:
-![](./images/knapsack.png)
+![](../images/knapsack.png)
 
 All <b>green boxes</b> have a total weight that is less than or equal to the capacity `7`, and all the <b>red ones</b> have a weight that is more than `7`. The best solution we have is with items `[B, D]` having a total profit of `22` and a total weight of `7`.
 
@@ -230,7 +230,7 @@ console.log(
 ### Overlapping Sub-problems
 
 Let’s visually draw the recursive calls to see if there are any overlapping sub-problems. As we can see, in each recursive call, `profits` and `weights` arrays remain constant, and only `capacity` and `currIndex` change. For simplicity, let’s denote capacity with `c` and `currIndex` with `i`:
-![](./images/subproblems.png)
+![](../images/subproblems.png)
 We can clearly see that `c:4, i=3` has been called twice. Hence we have an <b>overlapping sub-problems pattern</b>. We can use <b>[Memoization](https://en.wikipedia.org/wiki/Memoization)</b> to solve <b>overlapping sub-problems</b> efficiently.
 
 ### Top-down Dynamic Programming with Memoization
@@ -394,7 +394,7 @@ As we know, the final profit is at the bottom-right corner. Therefore, we will s
 As you remember, at every step, we had two options: include an item or skip it. If we skip an item, we take the profit from the remaining items (i.e., from the cell right above it); if we include the item, then we jump to the remaining profit to find more items.
 
 Let’s understand this from the above example:
-![](./images/dpselected.png)
+![](../images/dpselected.png)
 
 1. `22` did not come from the top cell (which is `17`); hence we must include the item at index `3` (which is item `D`).
 2. Subtract the profit of item `D` from `22` to get the remaining profit `6`. We then jump to profit `6` on the same row.
@@ -1776,7 +1776,7 @@ Let’s assume the four items are identified as `{A, B, C, and D}`, and use the 
 6. Subtract the profit of `B` from `50` to get the remaining profit `0`. We then jump to profit `0` on the same row. As soon as we hit zero remaining profit, we can finish our item search.
 7. So items going into the <b>knapsack</b> are `{B, D}`.
 
-![](./images/unbounded.png)
+![](../images/unbounded.png)
 
 ## Rod Cutting
 
@@ -1945,7 +1945,7 @@ Let’s understand this from the above example:
 6. 7. `2` did come from the top cell, so we jump to the first row.
       Now we must include a piece of length `1`. So the desired rod lengths are `{2, 2, 1}`.
 
-![](./images/dpRodCutting.png)
+![](../images/dpRodCutting.png)
 
 ## 🔎👩🏽‍🦯 Coin Change
 
@@ -2545,7 +2545,7 @@ The <b>time complexity</b> of the above algorithm is exponential `O(2ᴺ)` as we
 
 Let’s visually draw the recursion for `CalculateFibonacci(4)` to see the overlapping subproblems:
 
-![](./images/fib4.png)
+![](../images/fib4.png)
 
 We can use an array to store the already solved subproblems. Here is the code:
 
@@ -2689,7 +2689,7 @@ console.log(`Number of ways: ---> ${countWays(5)}`);
 - The <b>time complexity</b> of the above algorithm is exponential `O(3ᴺ)` as we are making three <i>recursive calls</i> in the same function. The <b>space complexity</b> is `O(n)` which is used to store the <i>recursion stack</i>.
 
 Let’s visually draw the recursion for `countWays(4)` to see the <i>overlapping subproblems</i>:
-![](./images/dpstairs.png)
+![](../images/dpstairs.png)
 
 We can clearly see the overlapping subproblem pattern: `countWays(2)` and `countWays(1)` have been called twice. We can optimize this using <b>memoization</b>.
 
@@ -2867,7 +2867,7 @@ console.log(`Number of ways: ---> ${countWays(6)}`);
 The <b>time complexity</b> of the above algorithm is exponential `O(3ᴺ)`. The <b>space complexity</b> is `O(n)` which is used to store the <i>recursion stack</i>.
 
 Let’s visually draw the recursion for `CountWays(5)` to see the <i>overlapping subproblems</i>:
-![](./images/dpnumberfactors.png)
+![](../images/dpnumberfactors.png)
 
 We can clearly see the <i>overlapping subproblems pattern</i>: `CountWays(3)`, `CountWays(2)` and` CountWays(1)` have been called twice. We can optimize this using <b>memoization</b> to store the results for <i>subproblems</i>.
 

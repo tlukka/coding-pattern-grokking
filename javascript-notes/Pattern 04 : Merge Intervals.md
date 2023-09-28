@@ -10,7 +10,7 @@ Given two intervals (`a` and `b`), there will be six different ways the two inte
 6. `a` and `b` do not overlap
 
 Understanding the above six cases will help us in solving all intervals related problems.
-![](./images/mergeintervals.png)
+![](../images/mergeintervals.png)
 
 ## Merge Intervals (medium)
 https://leetcode.com/problems/merge-intervals/
@@ -315,7 +315,7 @@ https://leetcode.com/problems/interval-list-intersections/
 
 This problem follows the [Merge Intervals pattern](#pattern-4--merge-intervals). As we have discussed under <b>Insert Interval</b>, there are five overlapping possibilities between two intervals`a` and `b`. A close observation will tell us that whenever the two intervals overlap, one of the interval’s `startTime` lies within the other interval. This rule can help us identify if any two intervals overlap or not.
 
-![](./images/mergeintervals.png)
+![](../images/mergeintervals.png)
 
 Now, if we have found that the two intervals overlap, how can we find the overlapped part?
 

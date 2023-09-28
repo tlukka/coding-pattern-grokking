@@ -198,7 +198,7 @@ An alternative could be to apply the <b>Binary Search</b> on the <i>“number ra
 5. If the count is equal to <b>`K`</b>, `n2` will be our required number as it is the <i>“biggest number less than or equal to the middle”</i>, and is definitely present in the matrix.
    If the count is less than <b>`K`</b>, we can update `start = n2` to search in the higher part of the matrix and if the count is greater than <b>`K`</b>, we can update `end = n1` to search in the lower part of the matrix in the next iteration.
 
-![](./images/kwaymatrix.png)
+![](../images/kwaymatrix.png)
 
 ```js
 function findKthsmallest(matrix, k) {
