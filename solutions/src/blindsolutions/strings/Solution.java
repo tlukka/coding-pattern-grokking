@@ -1,8 +1,11 @@
 package blindsolutions.strings;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 public class Solution {
 
@@ -16,13 +19,140 @@ public class Solution {
         System.out.println(s1.minWindow("ADOBECODEBANC", "ABC"));
         System.out.println(s1.minWindow("a", "a"));
         System.out.println(s1.minWindow("a", "aa"));
+        List<List<String>> validAnagrams = s1.groupAnagram(new String[]{"eat", "tea", "tan", "ate", "nat", "bat"});
+        for (List<String> anagram : validAnagrams) {
+            System.out.println(Arrays.toString(anagram.stream().toArray()));
+        }
+
+        System.out.println(s1.isValidParentheses("()[]{}"));
+    }
+
+    //659 · Encode and Decode Strings
+    //  implement encode and decode
+
+
+    // Palindromic Substrings
+    int countSubstringsPalindrome(String s) {
+        if (s == null || s.length() == 0)
+            return 0;
+        int count = 0;
+        for (int i = 0; i < s.length(); i++) {
+            count += findPalindromes(s, i, i);
+            count += findPalindromes(s, i, i + 1);
+        }
+        return count;
+    }
+
+    int findPalindromes(String s, int left, int right) {
+        int count = 0;
+        while (left >= 0 && right < s.length() && s.charAt(left) == s.charAt(right)) {
+            count++;
+            left--;
+            right++;
+        }
+        return count;
+    }
+
+    // Longest Palindrome in a string
+    String longestPalindromeWithDp(String s) {
+        int len = s.length();
+        String ans = "";
+        int max = 0;
+        boolean[][] dp = new boolean[len][len];
+        for (int j = 0; j < len; j++) {
+            for (int i = 0; i <= j; i++) {
+                boolean judge = s.charAt(i) == s.charAt(j);
+                dp[i][j] = j - i > 2 ? dp[i + 1][j + 1] && judge : judge;
+
+                if (dp[i][j] && j - i + 1 > max) {
+                    max = j - i + 1;
+                    ans = s.substring(i, j + 1);
+                }
+            }
+        }
+        return ans;
+    }
+
+    int start = 0, end = 0;
+
+    String longestPalindrome(String s) {
+        if (s == null || s.length() == 0) return "";
+        for (int i = 0; i < s.length(); i++) {
+            expandAroundCenter(s, i, i);
+            expandAroundCenter(s, i, i + 1);
+        }
+        return s.substring(start, end + 1);
+    }
+
+    void expandAroundCenter(String s, int left, int right) {
+        while (left >= 0 && right < s.length() && s.charAt(left) == s.charAt(right)) {
+            left--;
+            right++;
+        }
+        left++;
+        right++;
+        if (end - start + 1 < right - left + 1) {
+            start = left;
+            end = right;
+        }
+    }
+
+    boolean isValidPalindrome(String s1) {
+        if (s1 == null)
+            return false;
+        int p1 = 0, p2 = s1.length() - 1;
+        while (p1 <= p2) {
+            char c1 = s1.charAt(p1), c2 = s1.charAt(p2);
+            if (Character.isLetterOrDigit(c1))
+                p1++;
+            else if (Character.isLetterOrDigit(c2))
+                p2++;
+            else {
+                if (Character.toLowerCase(c1) != Character.toLowerCase(c2))
+                    return false;
+                p1++;
+                p2--;
+            }
+        }
+
+        return true;
+    }
+
+    // Valid Parentheses
+    boolean isValidParentheses(String str) {
+        Map<Character, Character> map = new HashMap<>();
+        map.put(')', '(');
+        map.put('}', '{');
+        map.put(']', '[');
+        Stack<Character> stack = new Stack<>();
+        for (char c : str.toCharArray()) {
+            if (!map.containsKey(c) && !stack.isEmpty()) {
+                char popChar = stack.pop();
+                if (popChar != map.get(c)) {
+                    return false;
+                }
+            }
+        }
+
+        return stack.isEmpty();
     }
 
     // Group of Anagram
-    List<String> groupAnagram(String[] strs) {
+    List<List<String>> groupAnagram(String[] strs) {
         Map<String, List<String>> map = new HashMap<>();
+        for (String str : strs) {
+            char[] ch_arr = str.toCharArray();
+            Arrays.sort(ch_arr);
+            String sortStr = new String(ch_arr);
+            if (!map.containsKey(sortStr)) {
+                map.put(sortStr, new ArrayList<>());
+            }
+            map.get(sortStr).add(str);
+        }
+        return new ArrayList<>(map.values());
 
     }
+
     // Valid Anagram
     boolean isValidAnagram(String s, String t) {
         if (s == null && t == null)
