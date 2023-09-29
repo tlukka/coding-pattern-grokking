@@ -1,4 +1,4 @@
-package HeapPatterns;
+package blindsolutions.heap;
 
 import java.util.Arrays;
 import java.util.Collections;

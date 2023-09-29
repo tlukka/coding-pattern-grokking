@@ -8,33 +8,30 @@ public class Solution {
 
     }
 
-    void reOrderList(ListNode head) {
+    void reorderList(ListNode head) {
         if (head == null || head.next == null)
             return;
+
         ListNode slow = head, fast = head;
         while (fast != null && fast.next != null) {
             slow = slow.next;
             fast = fast.next.next;
         }
 
+        ListNode head1 = head;
         ListNode head2 = slow.next;
         slow.next = null;
-        ListNode head1 = head;
 
-        // reverse head2
         head2 = reverse(head2);
-        ListNode curr = new ListNode(-1);
-        while (head1 != null) {
-            ListNode tmp = head1.next;
-            curr.next = head1;
-            head1.next = head2;
-            curr = head2;
-            head1 = tmp;
-            if (head2 != null) {
-                head2 = head2.next;
-            }
-        }
 
+        while (head2 != null) {
+            ListNode temp1 = head1.next;
+            ListNode temp2 = head2.next;
+            head1.next = head2;
+            head2.next = temp1;
+            head1 = temp1;
+            head2 = temp2;
+        }
     }
 
     ListNode removeNthFromEnd(ListNode head, int n) {
