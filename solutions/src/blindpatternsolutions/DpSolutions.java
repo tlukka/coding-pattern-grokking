@@ -1,4 +1,4 @@
-package blindsolutions.dp;
+package blindpatternsolutions;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -13,9 +13,9 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 
-public class Solution {
+public class DpSolutions {
     public static void main(String[] args) throws ParseException {
-        Solution sl = new Solution();
+        DpSolutions sl = new DpSolutions();
         /*System.out.println(sl.claimStairsWithDp(5));
         System.out.println(sl.claimStairs(5));
         System.out.println(sl.coinExchange(new int[]{1, 2, 5}, 11));

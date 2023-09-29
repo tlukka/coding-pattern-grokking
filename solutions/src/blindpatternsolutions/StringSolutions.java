@@ -1,4 +1,4 @@
-package blindsolutions.strings;
+package blindpatternsolutions;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -7,10 +7,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
-public class Solution {
+public class StringSolutions {
 
     public static void main(String[] args) {
-        Solution s1 = new Solution();
+        StringSolutions s1 = new StringSolutions();
         System.out.println(s1.lengthOfLongestSubstring("abcabcbb"));
         System.out.println(s1.lengthOfLongestSubstring("bbbbb"));
         System.out.println(s1.lengthOfLongestSubstring("pwwkew"));

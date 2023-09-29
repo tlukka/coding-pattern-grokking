@@ -1,6 +1,12 @@
-package blindsolutions.tree;
+package blindpatternsolutions;
+
+import java.util.HashMap;
 
 public class WordDictionary {
+    class TrieNode {
+        HashMap<Character, TrieNode> child = new HashMap<>();
+        boolean isEnd = true;
+    }
     TrieNode root;
 
     public WordDictionary() {

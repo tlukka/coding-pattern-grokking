@@ -1,4 +1,4 @@
-package blindsolutions.intervals;
+package blindpatternsolutions;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -7,7 +7,16 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
 
-public class Solution {
+public class IntervalSolutions {
+    class Interval {
+        int startTime;
+        int endTime;
+
+        public Interval(int start, int end) {
+            this.startTime = start;
+            this.endTime = end;
+        }
+    }
 
     List<Interval> findFreeTime(List<Interval> meetings) {
         meetings.sort(Comparator.comparingInt(a -> a.startTime));
@@ -150,12 +159,4 @@ public class Solution {
     }
 }
 
-class Interval {
-    int startTime;
-    int endTime;
 
-    public Interval(int start, int end) {
-        this.startTime = start;
-        this.endTime = end;
-    }
-}

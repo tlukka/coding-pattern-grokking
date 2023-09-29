@@ -1,13 +1,13 @@
-package blindsolutions.matrix;
+package blindpatternsolutions;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Solution {
+public class MatrixSolutions {
 
     public static void main(String[] args) {
-        Solution sl = new Solution();
+        MatrixSolutions sl = new MatrixSolutions();
         sl.setZeroes(new int[][]{{0, 1, 2, 0}, {3, 4, 5, 2}, {1, 3, 1, 5}});
         sl.setZeroesOptimized(new int[][]{{0, 1, 2, 0}, {3, 4, 5, 2}, {1, 3, 1, 5}});
         sl.setZeroes(new int[][]{{1, 1, 1}, {1, 0, 1}, {1, 1, 1}});

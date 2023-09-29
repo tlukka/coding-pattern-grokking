@@ -1,4 +1,4 @@
-package blindsolutions.arrays;
+package blindpatternsolutions;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,10 +8,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-public class Solution {
+public class ArraySolutions {
 
     public static void main(String[] args) {
-        Solution sl = new Solution();
+        ArraySolutions sl = new ArraySolutions();
         //System.out.println(sl.containsDuplicate(new int[] {2,14,18, 22,22}));
         //System.out.println(sl.containsDuplicateBySet(new int[] {2,14,18, 22,22}));
         //int[] productResult = sl.productExceptSelf(new int[]{1, 2, 3, 4});

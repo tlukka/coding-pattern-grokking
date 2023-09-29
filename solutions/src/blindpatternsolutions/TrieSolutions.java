@@ -1,8 +1,13 @@
-package blindsolutions.tree;
+package blindpatternsolutions;
 
 import java.util.HashMap;
 
 public class TrieSolutions {
+    class TrieNode {
+        HashMap<Character, TrieNode> child = new HashMap<>();
+        boolean isEnd = true;
+    }
+
     TrieNode root;
 
     public TrieSolutions() {
@@ -46,8 +51,5 @@ public class TrieSolutions {
     }
 }
 
-class TrieNode {
-    HashMap<Character, TrieNode> child = new HashMap<>();
-    boolean isEnd = true;
-}
+
 

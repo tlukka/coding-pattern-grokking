@@ -1,4 +1,4 @@
-package blindsolutions.graph;
+package blindpatternsolutions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 
-public class Catalog {
+public class GraphCatalogSolution {
 
 
     // Consider a CSV file used to hold Amazon's product catalog which has data in the form of 'category -> product'.
@@ -16,7 +16,7 @@ public class Catalog {
     private Map<String, Integer> categoryCount;
     private List<String> catalog;
 
-    public Catalog(List<String> catalog) {
+    public GraphCatalogSolution(List<String> catalog) {
         this.catalog = catalog;
         this.categoryCount = new HashMap<>();
     }

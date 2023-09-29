@@ -1,4 +1,4 @@
-package blindsolutions.heap;
+package blindpatternsolutions;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -8,7 +8,7 @@ import java.util.PriorityQueue;
 //insertNum(int num): stores the number in the class
 // findMedian(): returns the median of all numbers inserted in the class If the count of numbers inserted
 // in the class is even, the median will be the average of the middle two numbers.
-public class MedianStream {
+public class HeapMedianStream {
     PriorityQueue<Integer> minHeap = new PriorityQueue<>();
     ;
     PriorityQueue<Integer> maxHeap = new PriorityQueue<>(Collections.reverseOrder());
@@ -59,7 +59,7 @@ public class MedianStream {
 
 
     public static void main(String[] args) {
-        MedianStream as = new MedianStream();
+        HeapMedianStream as = new HeapMedianStream();
         as.insertNum(3);
         as.insertNum(1);
         System.out.println(as.findMedian());

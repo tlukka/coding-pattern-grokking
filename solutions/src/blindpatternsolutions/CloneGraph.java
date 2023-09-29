@@ -1,4 +1,4 @@
-package blindsolutions.graph;
+package blindpatternsolutions;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -7,6 +7,20 @@ import java.util.Map;
 import java.util.Queue;
 
 public class CloneGraph {
+    class Node {
+        public int val;
+        public List<Node> neighbors;
+
+        public Node(int val) {
+            this.val = val;
+        }
+
+        public Node(int val, List<Node> neighbors) {
+            this.neighbors = neighbors;
+            this.val = val;
+        }
+    }
+
     public static void main(String[] args) {
 
     }
@@ -54,19 +68,5 @@ public class CloneGraph {
         }
         //step 6
         return newNode;
-    }
-}
-
-class Node {
-    public int val;
-    public List<Node> neighbors;
-
-    public Node(int val) {
-        this.val = val;
-    }
-
-    public Node(int val, List<Node> neighbors) {
-        this.neighbors = neighbors;
-        this.val = val;
     }
 }

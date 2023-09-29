@@ -1,11 +1,11 @@
-package blindsolutions.graph;
+package blindpatternsolutions;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class ManagerPeers {
+public class GraphManagerPeers {
 
     //Design the ds which stores this relationship so that the following queries are supported.
     //
@@ -81,7 +81,7 @@ public class ManagerPeers {
     }
 
     public static void main(String[] args) {
-        ManagerPeers s = new ManagerPeers();
+        GraphManagerPeers s = new GraphManagerPeers();
         s.setManager(1, 2);
         s.setManager(2, 3);
         boolean res1 = s.query(1, 2);  //true

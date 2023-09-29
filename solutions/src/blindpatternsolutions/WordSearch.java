@@ -1,4 +1,4 @@
-package blindsolutions.tree;
+package blindpatternsolutions;
 
 import java.util.ArrayList;
 import java.util.HashMap;

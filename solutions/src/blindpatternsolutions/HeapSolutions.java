@@ -1,4 +1,4 @@
-package blindsolutions.heap;
+package blindpatternsolutions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
-public class Solution {
+public class HeapSolutions {
 
     int[] topKFrequent(int[] nums, int k) {
         Map<Integer, Integer> map = new HashMap<>();

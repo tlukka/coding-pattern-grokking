@@ -1,4 +1,4 @@
-package blindsolutions.backtracking;
+package blindpatternsolutions;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -7,11 +7,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class Solution {
+public class BackTrackSolutions {
     // NOTE all below problems are defined in article at leet code
     // https://leetcode.com/problems/combination-sum/solutions/16502/a-general-approach-to-backtracking-questions-in-java-subsets-permutations-combination-sum-palindrome-partitioning/
     public static void main(String[] args) {
-        Solution s1 = new Solution();
+        BackTrackSolutions s1 = new BackTrackSolutions();
         /*List<List<Integer>> result = s1.combinationSum(new int[]{2, 3, 6, 7}, 7);
         for (List<Integer> rs : result) {
             System.out.println(Arrays.toString(rs.stream().toArray()));

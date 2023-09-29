@@ -1,4 +1,4 @@
-package blindsolutions.tree;
+package blindpatternsolutions;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,7 +9,16 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Stack;
 
-public class Solution {
+public class TreeSolutions {
+    class TreeNode {
+        int val;
+        TreeNode left;
+        TreeNode right;
+
+        TreeNode(int val) {
+            this.val = val;
+        }
+    }
 
     // Kth Smallest in Binary Tree
     int kthSmallestBST(TreeNode root, int k) {
@@ -261,15 +270,5 @@ public class Solution {
         pathSum(root.left, currSum, target, currList, map);
         pathSum(root.right, currSum, target, currList, map);
         currList.remove(currList.size() - 1);
-    }
-}
-
-class TreeNode {
-    int val;
-    TreeNode left;
-    TreeNode right;
-
-    TreeNode(int val) {
-        this.val = val;
     }
 }

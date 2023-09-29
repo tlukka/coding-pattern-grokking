@@ -1,4 +1,4 @@
-package blindsolutions.graph;
+package blindpatternsolutions;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,9 +11,9 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Set;
 
-public class Solution {
+public class GraphSolutions {
     public static void main(String[] args) {
-        Solution s1 = new Solution();
+        GraphSolutions s1 = new GraphSolutions();
         /*System.out.println(s1.canFinish(2, new int[][]{{1, 0}}));
         System.out.println(s1.canFinish(2, new int[][]{{1, 0}, {0, 1}}));
         List<List<Integer>> waterGrid = s1.pacificAtlantic(new int[][]{{1, 2, 2, 3, 5}, {3, 2, 3, 4, 4}, {2, 4, 5, 3, 1}, {6, 7, 1, 4, 5}, {5, 1, 1, 2, 4}});
