@@ -1,7 +1,10 @@
 package grokkingpattern;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Set;
@@ -66,8 +69,18 @@ public class SlidingWindowSolutions {
         System.out.println(sol.characterReplacement("ABAB", 2));
         System.out.println(sol.characterReplacement("AABABBA", 1));
 
-         */
+
         System.out.println(sol.checkInclusion("ab", "eidbaooo"));
+
+
+
+        System.out.println(Arrays.toString(sol.findAnagrams("ppqp", "pq").stream().toArray()));
+        System.out.println(Arrays.toString(sol.findAnagrams("cbaebabacd", "abc").stream().toArray()));
+
+         */
+        System.out.println(sol.minWindow("abdbca", "abc"));
+        System.out.println(sol.minWindow("a", "aa"));
+        System.out.println(sol.minWindow("adcad", "abc"));
     }
 
     // Find a contiguous subarray whose length is equal to k that has the maximum average value and return this value
@@ -444,5 +457,78 @@ public class SlidingWindowSolutions {
             if (f1[i] != f2[i]) return false;
         }
         return true;
+    }
+
+    // Find All Anagrams in a String
+    // Given two strings s and p, return an array of all the start indices of p's anagrams in s..
+    // Input: s = "cbaebabacd", p = "abc" ===> Output: [0,6]
+    // Input: s = "abab", p = "ab" Output: [0,1,2]
+    List<Integer> findAnagrams(String s, String p) {
+        HashMap<Character, Integer> map = new HashMap<>();
+        for (char ch : p.toCharArray()) {
+            map.put(ch, map.getOrDefault(ch, 0) + 1);
+        }
+        List<Integer> result = new ArrayList<>();
+        int start = 0, matched = 0;
+        for (int right = 0; right < s.length(); right++) {
+            char ch = s.charAt(right);
+            if (map.containsKey(ch)) {
+                map.put(ch, map.get(ch) - 1); // decrement count
+                if (map.get(ch) == 0)
+                    matched++;
+            }
+
+            if (matched == map.size())
+                result.add(start);
+
+            // sliding window...
+            if (right >= p.length() - 1) {
+                char ch_start = s.charAt(start++);
+                if (map.containsKey(ch_start)) {
+                    if (map.get(ch_start) == 0)
+                        matched--; //before putting the character back decrement the matched count
+                    map.put(ch_start, map.get(ch_start) + 1);
+                }
+            }
+        }
+        return result;
+    }
+
+    // Given two strings s and t of lengths m and n respectively, return the minimum window
+    //substring of s such that every character in t (including duplicates) is included in the window
+    String minWindow(String s, String t) {
+        if(s.length()<t.length())
+            return "";
+        HashMap<Character, Integer> freqMap = new HashMap<>();
+        for (char ch : t.toCharArray())
+            freqMap.put(ch, freqMap.getOrDefault(ch, 0) + 1);
+
+        int minLength = Integer.MAX_VALUE, leftIndex = -1, rightIndex = -1, count = 0, left = 0, requiredCount = freqMap.size();
+        HashMap<Character, Integer> windowMap = new HashMap<>();
+        for (int right = 0; right < s.length(); right++) {
+            char ch = s.charAt(right);
+            windowMap.put(ch, windowMap.getOrDefault(ch, 0) + 1);
+            if (freqMap.containsKey(ch) && freqMap.get(ch).intValue() == windowMap.get(ch).intValue())
+                count++;
+
+            while (requiredCount == count) {
+                if (minLength > right - left + 1) {
+                    minLength = right - left + 1;
+                    leftIndex = left;
+                    rightIndex = right;
+                }
+
+                char ch_left = s.charAt(left);
+                windowMap.put(ch_left, windowMap.getOrDefault(ch_left, 0) - 1);
+                if (freqMap.containsKey(ch_left) && freqMap.get(ch_left).intValue() > windowMap.get(ch_left).intValue())
+                    count--;
+                left++;
+            }
+        }
+
+        if (leftIndex == -1 || rightIndex == -1)
+            return "";
+        return s.substring(leftIndex, rightIndex + 1);
+
     }
 }
