@@ -1,4 +1,4 @@
-package blindpatternsolutions;
+package grokkingpattern;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -110,13 +110,23 @@ public class BackTrackSolutions {
 
         System.out.println(Arrays.toString(s1.letterCombinationsForPhone("23").toArray()));
 
+
+
+        System.out.println(s1.wordBreak("leetcode", Arrays.asList("leet", "code")));
+        System.out.println(Arrays.toString(s1.wordBreakIIRecursion("catsanddog", Arrays.asList(new String[]{"cat", "cats", "and", "sand", "dog"})).stream().toArray()));
+        System.out.println(Arrays.toString(s1.wordBreakIIWithBackTracking("catsanddog", Arrays.asList(new String[]{"cat", "cats", "and", "sand", "dog"})).stream().toArray()));
+
+        System.out.println(Arrays.toString(s1.wordBreakIIRecursion("pineapplepenapple", Arrays.asList(new String[]{"apple", "pen", "applepen", "pine", "pineapple"})).stream().toArray()));
+        System.out.println(Arrays.toString(s1.wordBreakIIRecursion("pineapplepenapple", Arrays.asList(new String[]{"apple", "pen", "applepen", "pine", "pineapple"})).stream().toArray()));
          */
-
-        System.out.println(Arrays.toString(s1.wordBreak("catsanddog", Arrays.asList(new String[]{"cat", "cats", "and", "sand", "dog"})).stream().toArray()));
-        System.out.println(Arrays.toString(s1.wordBreakII("catsanddog", Arrays.asList(new String[]{"cat", "cats", "and", "sand", "dog"})).stream().toArray()));
-
-        System.out.println(Arrays.toString(s1.wordBreak("pineapplepenapple", Arrays.asList(new String[]{"apple", "pen", "applepen", "pine", "pineapple"})).stream().toArray()));
-        System.out.println(Arrays.toString(s1.wordBreakII("pineapplepenapple", Arrays.asList(new String[]{"apple", "pen", "applepen", "pine", "pineapple"})).stream().toArray()));
+        List<List<String>> nQueens = s1.solveNQueens(4);
+        for(List<String> queenPlace: nQueens) {
+            System.out.println(Arrays.toString(queenPlace.toArray()));
+        }
+        List<List<Integer>> nRowQueens = s1.getNQueen(4);
+        for(List<Integer> queenPlace: nRowQueens) {
+            System.out.println(Arrays.toString(queenPlace.toArray()));
+        }
     }
 
     // Find all valid combinations of k numbers that sum up to n such that the following conditions are true:
@@ -373,6 +383,53 @@ public class BackTrackSolutions {
     // https://leetcode.com/problems/n-queens/solutions/2107776/Explained-with-Diagrams-or-Backtracking-and-Bit-manipulation/
     // Given an integer n, return all distinct solutions to the n-queens puzzle. You may return the answer in any order.
 
+    List<List<String>> solveNQueens(int n) {
+        char[][] emptyBoard = new char[n][n];
+        for (char[] row : emptyBoard)
+            Arrays.fill(row, '.');
+        List<List<String>> result = new ArrayList<>();
+        backTrackNQueens(result, emptyBoard, 0, 0, 0, 0, n);
+        return result;
+    }
+
+    void backTrackNQueens(List<List<String>> result, char[][] board, int row, int cols, int diags, int antiDiags, int n) {
+        if (row == n) {
+            result.add(toBoard(board));
+            return;
+        }
+        for (int col = 0; col < n; col++) {
+            int diag = row - col + n;
+            int antidiag = row + col;
+
+            // check queen placed in valid placement
+            if ((cols & (1 << col)) != 0 || (diags & (1 << diag)) != 0 && (antiDiags & (1 << antidiag)) != 0)
+                continue;
+
+            // update board
+            board[row][col] = 'Q';
+            cols |= (1 << col);
+            antiDiags |= (1 << antidiag);
+            diags |= (1 << diag);
+
+            // continue to below row
+            backTrackNQueens(result, board, row + 1, cols, diags, antiDiags, n);
+
+            // undo
+            board[row][col] = '.';
+            cols ^= (1 << col);
+            antiDiags ^= (1 << antidiag);
+            diags ^= (1 << diag);
+        }
+
+    }
+
+    static List<String> toBoard(char[][] board) {
+        List<String> resultBoard = new ArrayList<>();
+        for (char[] row : board)
+            resultBoard.add(new String(row));
+        return resultBoard;
+    }
+
     List<List<Integer>> getNQueen(int n) {
         List<List<Integer>> result = new ArrayList<>();
         backtrackNQueenMove(result, new ArrayList<>(), n, 0);
@@ -486,17 +543,35 @@ public class BackTrackSolutions {
         }
     }
 
+    // Given a string s and a dictionary of strings wordDict,
+    // return true if s can be segmented into a space-separated sequence of one or more dictionary words.
+    boolean wordBreak(String s, List<String> dictWord) {
+        int len = s.length();
+        boolean[] dp = new boolean[len + 1];
+        dp[0] = true;
+        Set<String> hashSet = new HashSet<>(dictWord);
+        for (int i = 1; i <= s.length(); i++) {
+            for (int j = 0; j < i; j++) {
+                if (hashSet.contains(s.substring(j, i)) && dp[j] == true) {
+                    dp[i] = true;
+                    break;
+                }
+            }
+        }
+        return dp[len];
+    }
+
     // Given a string s and a dictionary of strings wordDict, add spaces in s to construct a sentence
     // where each word is a valid dictionary word
     // https://leetcode.com/problems/word-break-ii/
     // Input: s = "catsanddog", wordDict = ["cat","cats","and","sand","dog"] /Output: ["cats and dog","cat sand dog"]
-    List<String> wordBreakII(String s, List<String> wordDict) {
+    List<String> wordBreakIIRecursion(String s, List<String> wordDict) {
         List<String> res = new ArrayList<>();
         Set<String> set = new HashSet<>(wordDict);
         for (int i = 1; i <= s.length(); i++) {
             String sub = s.substring(0, i);
             if (set.contains(sub)) {
-                List<String> tmp = wordBreakII(s.substring(i, s.length()), wordDict);
+                List<String> tmp = wordBreakIIRecursion(s.substring(i), wordDict);
                 for (String x : tmp)
                     res.add(sub + " " + x);
                 if (tmp.size() == 0 && i == s.length())
@@ -506,8 +581,7 @@ public class BackTrackSolutions {
         return res;
     }
 
-    // Note: 93. Restore IP Addresses", grab all possible path.
-    List<String> wordBreak(String s, List<String> wordDict) {
+    List<String> wordBreakIIWithBackTracking(String s, List<String> wordDict) {
         Set<String> set = new HashSet<>(wordDict);
         List<List<String>> result = new ArrayList<>();
         backTrackFindNextWord(result, new ArrayList<>(), s, set, 0);
