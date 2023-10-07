@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 public class BackTrackSolutions {
@@ -120,11 +121,11 @@ public class BackTrackSolutions {
         System.out.println(Arrays.toString(s1.wordBreakIIRecursion("pineapplepenapple", Arrays.asList(new String[]{"apple", "pen", "applepen", "pine", "pineapple"})).stream().toArray()));
          */
         List<List<String>> nQueens = s1.solveNQueens(4);
-        for(List<String> queenPlace: nQueens) {
+        for (List<String> queenPlace : nQueens) {
             System.out.println(Arrays.toString(queenPlace.toArray()));
         }
         List<List<Integer>> nRowQueens = s1.getNQueen(4);
-        for(List<Integer> queenPlace: nRowQueens) {
+        for (List<Integer> queenPlace : nRowQueens) {
             System.out.println(Arrays.toString(queenPlace.toArray()));
         }
     }
@@ -612,4 +613,102 @@ public class BackTrackSolutions {
         }
 
     }
+
+
+    // Cracking the Safe
+    // Return any string of minimum length that will unlock the safe at some point of entering it.
+    // https://leetcode.com/problems/cracking-the-safe
+
+    // Input: n = 1, k = 2 == > Output: "10"
+    //Explanation: The password is a single digit, so enter each digit. "01" would also unlock the safe.
+
+    // Input: n = 2, k = 2 ==> Output: "01100"
+    //Explanation: For each possible password:
+    //- "00" is typed in starting from the 4th digit.
+    //- "01" is typed in starting from the 1st digit.
+    //- "10" is typed in starting from the 3rd digit.
+    //- "11" is typed in starting from the 2nd digit.
+    //Thus "01100" will unlock the safe. "10011", and "11001" would also unlock the safe.
+    String crackSafe(int n, int k) {
+        int target = (int) (Math.pow(n, k)); // permutations
+        StringBuilder result = new StringBuilder();
+        Random ran = new Random();
+        for (int i = 0; i < n; i++) {
+            result.append(ran.nextInt(k));
+        }
+
+        Set<String> visited = new HashSet<>();
+        visited.add(result.toString());
+        dfsCrackSafe(result, target, n, k, visited);
+        return result.toString();
+    }
+
+    boolean dfsCrackSafe(StringBuilder result, int target, int n, int k, Set<String> visited) {
+        // Base case...
+        if (visited.size() == target)
+            return true;
+
+        String prev = result.substring(result.length() - n + 1, result.length());
+        for (int i = 0; i < k; i++) {
+            String next = prev + i;
+            if (!visited.contains(next)) {
+                visited.add(next);
+                result.append(i);
+                // checking to safe crack
+                if (dfsCrackSafe(result, target, n, k, visited))
+                    return true;
+                else {
+                    // reset
+                    visited.remove(next);
+                    result.delete(result.length() - 1, result.length());
+                }
+            }
+        }
+
+        return false;
+    }
+
+    // Longest Increasing Path in a Matrix
+    // Given an m x n integers matrix, return the length of the longest increasing path in matrix.
+    // input [[9,9,4],[6,6,8],[2,1,1]] ==> output 4
+
+    int longestIncreasingPath(int[][] matrix) {
+        int rows = matrix.length, cols = matrix[0].length;
+        int[][] dp = new int[rows][cols];
+        for (int[] d : dp)
+            Arrays.fill(d, -1);
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols; col++) {
+                if (dp[row][col] == -1)
+                    dfsLongestIncreaseingPath(row, col, -1, matrix, dp);
+            }
+        }
+
+        int maxPath = Integer.MIN_VALUE;
+        for (int[] d : dp) {
+            maxPath = Math.max(maxPath, Arrays.stream(d).max().getAsInt());
+        }
+
+        return maxPath;
+
+    }
+
+    int dfsLongestIncreaseingPath(int row, int col, int target, int[][] matrix, int[][] dp) {
+        // base case...
+        if (row < 0 || row >= matrix.length || col < 0 || col >= matrix[0].length || matrix[row][col] <= target)
+            return 0;
+        if (dp[row][col] != -1)
+            return dp[row][col];
+
+        target = dp[row][col];
+        int up = dfsLongestIncreaseingPath(row - 1, col, target, matrix, dp); // up
+        int down = dfsLongestIncreaseingPath(row + 1, col, target, matrix, dp); // dow
+        int left = dfsLongestIncreaseingPath(row, col - 1, target, matrix, dp); // left
+        int right = dfsLongestIncreaseingPath(row, col + 1, target, matrix, dp); // right
+
+        dp[row][col] = 1 + Math.max(Math.max(left, right), Math.max(up, down));
+        return dp[row][col];
+    }
+
+
 }

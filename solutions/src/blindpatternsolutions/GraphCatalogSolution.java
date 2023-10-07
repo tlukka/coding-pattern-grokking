@@ -27,10 +27,7 @@ public class GraphCatalogSolution {
         for (String entry : catalog) {
             String[] parts = entry.split(" : ");
             String category = parts[0];
-            if (!categoryCount.containsKey(category)) {
-                categoryCount.put(category, 0);
-            }
-            categoryCount.put(category, categoryCount.get(category) + 1);
+            categoryCount.put(category, categoryCount.getOrDefault(category, 0) + 1);
         }
 
         // use a priority queue to store the top k categories

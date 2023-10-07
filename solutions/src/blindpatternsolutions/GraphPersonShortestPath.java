@@ -96,7 +96,9 @@ public class GraphPersonShortestPath {
 
             for (Person neighbour : connections.getOrDefault(person, new ArrayList<Person>())) {
                 Path nextPath = new Path();
-                nextPath.list = new ArrayList<Person>(path.list); // We polled this path from the queue initially, now we will add the new neighbour to it and then we will offer it to the queue again
+                // We polled this path from the queue initially, now we will
+                // add the new neighbour to it and then we will offer it to the queue again
+                nextPath.list = new ArrayList<Person>(path.list);
                 nextPath.list.add(neighbour);
                 queue.add(nextPath);
             }
