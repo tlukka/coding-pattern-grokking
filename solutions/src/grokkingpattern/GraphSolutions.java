@@ -833,17 +833,17 @@ public class GraphSolutions {
     //  Number of Increasing Paths in a Grid
     // https://leetcode.com/problems/number-of-increasing-paths-in-a-grid
     int countPaths(int[][] grid) {
-        int n=grid.length, m=grid[0].length;
+        int n = grid.length, m = grid[0].length;
         int[][] dp = new int[n][m];
-        for(int[] d: dp)
+        for (int[] d : dp)
             Arrays.fill(d, -1);
 
-        int max=0;
-        int mod=1000000007;
-        for(int i=0; i<n; i++) {
-            for(int j=0; j<m; j++) {
+        int max = 0;
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
                 max += dfsCountPath(grid, dp, i, j);
-                max %=mod;
+                max %= mod;
             }
         }
 
@@ -851,6 +851,7 @@ public class GraphSolutions {
     }
 
     int[][] dir = new int[][]{{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
+    int mod = 1000000007;
 
     int dfsCountPath(int[][] grid, int[][] dp, int r, int c) {
         int count = 1;
@@ -861,7 +862,112 @@ public class GraphSolutions {
             if (x >= 0 && x < grid.length && y >= 0 && y < grid[0].length && grid[x][y] > grid[r][c])
                 count += dfsCountPath(grid, dp, r, c);
         }
-        return dp[r][c] = count;
+        return dp[r][c] = count % mod;
+    }
+
+    //Flood Fill
+    // https://leetcode.com/problems/flood-fill
+    int[][] floodFill(int[][] image, int sr, int sc, int color) {
+        if (image[sr][sc] == color)
+            return image;
+        dfsFill(image, sr, sc, color, image[sr][sc]);
+        return image;
+    }
+
+    void dfsFill(int[][] image, int sr, int sc, int color, int current) {
+        if (sc < 0 || sc >= image[0].length || sr < 0 || sr >= image.length)
+            return;
+        if (image[sr][sc] != current)
+            return;
+        image[sr][sc] = color;
+        for (int[] d : dir) {
+            dfsFill(image, sr + d[0], sc + d[1], color, current);
+        }
+    }
+
+    // Given an m x n binary matrix mat, return the distance of the nearest 0 for each cell.
+    // https://leetcode.com/problems/01-matrix
+    int[][] updateMatrix(int[][] mat) {
+        if (mat == null || mat.length == 0 || mat[0].length == 0)
+            return new int[0][0];
+        int n = mat.length, m = mat[0].length;
+        Queue<int[]> queue = new LinkedList<>();
+        int maxValue = n * m;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (mat[i][j] == 0)
+                    queue.add(new int[]{i, j});
+                else
+                    mat[i][j] = maxValue;
+            }
+        }
+
+        int[][] directions = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+        while (!queue.isEmpty()) {
+            int[] cell = queue.poll();
+            for (int[] d : directions) {
+                int r = d[0] + cell[0], c = d[1] + cell[1];
+                if (r >= 0 && r < n && c >= 0 && c < m && mat[r][c] > mat[cell[0]][cell[1]] + 1) {
+                    queue.offer(new int[]{r, c});
+                    mat[r][c] = mat[cell[0]][cell[1]] + 1;
+                }
+            }
+        }
+
+        return mat;
+
+    }
+
+    // https://leetcode.com/problems/number-of-provinces
+    //Number of Provinces
+
+    int findCircleNum(int[][] isConnected) {
+        int n = isConnected.length;
+        boolean[] visited = new boolean[n];
+        int count = 0;
+        for (int i = 0; i < n; i++) {
+            if (!visited[i]) {
+                dfsConnected(isConnected, visited, i);
+                count++;
+            }
+        }
+        return count;
+    }
+
+    void dfsConnected(int[][] connected, boolean[] visited, int start) {
+        visited[start] = true;
+        for (int i = 0; i < connected.length; i++) {
+            if (connected[start][1] == 1 && !visited[i]) {
+                dfsConnected(connected, visited, i);
+            }
+        }
+    }
+
+    int findCircleNumByBfs(int[][] grid) {
+        boolean[] visited = new boolean[grid.length];
+        int c = 0;
+        for (int i = 0; i < grid.length; i++) {
+            if (!visited[i]) {
+                bfs(i, grid, visited);
+                c++;
+            }
+        }
+        return c;
+    }
+
+    void bfs(int s, int[][] grid, boolean[] visited) {
+        visited[s] = true;
+        Queue<Integer> queue = new LinkedList<>();
+        queue.add(s);
+        while (!queue.isEmpty()) {
+            int j = queue.poll();
+            for (int i = 0; i < grid[j].length; i++) {
+                if (!visited[i] && grid[j][i] == 1) {
+                    visited[i] = true;
+                    queue.add(i);
+                }
+            }
+        }
     }
 
 }
