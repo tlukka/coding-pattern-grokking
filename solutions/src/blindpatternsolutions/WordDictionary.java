@@ -16,9 +16,7 @@ public class WordDictionary {
     public void addWord(String word) {
         TrieNode current = root;
         for (char ch : word.toCharArray()) {
-            if (!current.child.containsKey(ch)) {
-                current.child.put(ch, new TrieNode());
-            }
+            current.child.putIfAbsent(ch, new TrieNode());
             current = current.child.get(ch);
         }
         current.isEnd = true;

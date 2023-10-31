@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.util.Set;
 
 public class ArraySolutions {
 
@@ -58,7 +59,7 @@ public class ArraySolutions {
         for (int i = 0; i < nums.length; i++) {
             int diff = target - nums[i];
             if (!map.containsKey(diff)) {
-                map.put(nums[i], i);
+                map.put(nums[i], i); // storing index of item
             } else {
                 return new int[]{i, map.get(diff)};
             }
@@ -72,9 +73,7 @@ public class ArraySolutions {
         if (prices == null || prices.length < 2) return 0;
         int buy = prices[0], max_profit = Integer.MIN_VALUE;
         for (int i = 1; i < prices.length; i++) {
-            if (buy > prices[i]) {
-                buy = prices[i];
-            }
+            buy = Math.min(buy, prices[i]);
             max_profit = Math.max(prices[i] - buy, max_profit);
         }
         return max_profit;
@@ -147,17 +146,18 @@ public class ArraySolutions {
         for (int i = 0; i < nums.length; i++) {
             sum += nums[i];
             maxSum = Math.max(maxSum, sum);
-            if (sum < 0) sum = 0;
+            if (sum < 0)
+                sum = 0;
         }
         return maxSum;
     }
 
     public int maxSubArray(int[] nums) {
         if (nums == null || nums.length == 0) return 0;
-        int curr = nums[0], maxSum = nums[0];
+        int currSum = nums[0], maxSum = nums[0];
         for (int i = 1; i < nums.length; i++) {
-            curr = Math.max(nums[i], curr + nums[i]);
-            maxSum = Math.max(curr, maxSum);
+            currSum = Math.max(nums[i], currSum + nums[i]);
+            maxSum = Math.max(currSum, maxSum);
         }
         return maxSum;
     }
@@ -195,13 +195,17 @@ public class ArraySolutions {
             // Modified Binary Search
             int mid = l + (r - l) / 2;
             // decreasing order with mid & mid -1
-            if (nums[mid] > nums[mid + 1]) return nums[mid + 1];
+            if (nums[mid] > nums[mid + 1])
+                return nums[mid + 1];
             // decreasing order with mid & mid-1
-            if (nums[mid - 1] > nums[mid]) return nums[mid];
+            if (nums[mid - 1] > nums[mid])
+                return nums[mid];
 
             // check sorting order
-            if (nums[l] < nums[mid]) l = mid + 1;
-            else r = mid - 1;
+            if (nums[l] < nums[mid])
+                l = mid + 1;
+            else
+                r = mid - 1;
         }
         return 0;
     }
@@ -218,11 +222,15 @@ public class ArraySolutions {
             int mid = l + (r - l) / 2;
             if (nums[mid] == target) return mid;
             if (nums[l] <= nums[mid]) { // left sub array sorted
-                if (nums[l] <= target && target < nums[mid]) r = mid - 1;
-                else l = mid + 1;
+                if (nums[l] <= target && target < nums[mid])
+                    r = mid - 1;
+                else
+                    l = mid + 1;
             } else { // right sub array sorted
-                if (nums[mid] < target && target <= nums[r]) l = mid + 1;
-                else r = mid - 1;
+                if (nums[mid] < target && target <= nums[r])
+                    l = mid + 1;
+                else
+                    r = mid - 1;
             }
         }
         return -1;
@@ -344,7 +352,6 @@ public class ArraySolutions {
     }
 
     // One Away Strings I/p : abcdef & abcdf => true   abcde & abcde => true  abcde & abcd => true
-
     boolean isOneAway(String s1, String s2) {
         if (s1 == null && s2 == null) return true;
         if ((s1.length() == 0 && s2.length() == 1) || (s2.length() == 0 && s1.length() == 1)) return true;
@@ -368,16 +375,6 @@ public class ArraySolutions {
 
     boolean isSameInDiffLengthStrings(String s1, String s2) {
         int countDiff = 0;
-        /*int idx = 0;
-        while (idx < s2.length()) {
-            if (s1.charAt(idx + countDiff) == s2.charAt(idx))
-                idx++;
-            else {
-                countDiff++;
-                if (countDiff > 1)
-                    return false;
-            }
-        }*/
         for (int i = 0; i < s2.length(); i++) {
             if (s1.charAt(i + countDiff) != s2.charAt(i)) countDiff++;
             if (countDiff > 1) return false;
@@ -536,4 +533,20 @@ public class ArraySolutions {
         return reverse;
     }
 
+    // Valid Sudoku
+    boolean isValidSudoku(char[][] board) {
+        Set<String> set = new HashSet<>();
+        for (int r = 0; r < 9; r++) {
+            for (int c = 0; c < 9; c++) {
+                char num = board[r][c];
+                if (num != '.') {
+                    if (!set.add(num + " in row" + r) || !set.add(num + "in col" + c) ||
+                            !set.add(num + " in block" + (r / 3) + "," + (c / 3)))
+                        return false;
+                }
+            }
+        }
+
+        return true;
+    }
 }

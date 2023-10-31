@@ -1,11 +1,15 @@
 package blindpatternsolutions;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.PriorityQueue;
 import java.util.Stack;
+import java.util.TreeSet;
 
 public class StringSolutions {
 
@@ -53,28 +57,7 @@ public class StringSolutions {
         return count;
     }
 
-    // Longest Palindrome in a string
-    String longestPalindromeWithDp(String s) {
-        int len = s.length();
-        String ans = "";
-        int max = 0;
-        boolean[][] dp = new boolean[len][len];
-        for (int j = 0; j < len; j++) {
-            for (int i = 0; i <= j; i++) {
-                boolean judge = s.charAt(i) == s.charAt(j);
-                dp[i][j] = j - i > 2 ? dp[i + 1][j + 1] && judge : judge;
-
-                if (dp[i][j] && j - i + 1 > max) {
-                    max = j - i + 1;
-                    ans = s.substring(i, j + 1);
-                }
-            }
-        }
-        return ans;
-    }
-
     int start = 0, end = 0;
-
     String longestPalindrome(String s) {
         if (s == null || s.length() == 0) return "";
         for (int i = 0; i < s.length(); i++) {
@@ -96,6 +79,28 @@ public class StringSolutions {
             end = right;
         }
     }
+
+
+    // Longest Palindrome in a string
+    String longestPalindromeWithDp(String s) {
+        int len = s.length();
+        String ans = "";
+        int max = 0;
+        boolean[][] dp = new boolean[len][len];
+        for (int j = 0; j < len; j++) {
+            for (int i = 0; i <= j; i++) {
+                boolean judge = s.charAt(i) == s.charAt(j);
+                dp[i][j] = j - i > 2 ? dp[i + 1][j + 1] && judge : judge;
+
+                if (dp[i][j] && j - i + 1 > max) {
+                    max = j - i + 1;
+                    ans = s.substring(i, j + 1);
+                }
+            }
+        }
+        return ans;
+    }
+
 
     boolean isValidPalindrome(String s1) {
         if (s1 == null)
@@ -206,6 +211,82 @@ public class StringSolutions {
         return s.substring(leftIndex, rightIndex + 1);
     }
 
+    String minWindowWithArray(String s, String t) {
+        int[] map = new int[128];
+        for (char c : t.toCharArray())
+            map[c]++;
+
+        int begin = 0, left = 0, minLen = Integer.MAX_VALUE, count = t.length();
+        for (int right = 0; right < s.length(); right++) {
+            char c = s.charAt(right);
+            map[c]--;
+            if (map[c] >= 0)
+                count--;
+
+            while (count == 0) {
+                char leftc = s.charAt(left);
+                map[leftc]++;
+                if (map[leftc] > 0) {
+                    if (right - left + 1 < minLen) {
+                        begin = left;
+                        minLen = right - left + 1;
+                    }
+                    count++;
+                }
+                left++;
+            }
+        }
+
+        return minLen == Integer.MAX_VALUE ? "" : s.substring(begin, begin + minLen);
+    }
+
+    // https://leetcode.com/problems/sliding-window-maximum
+    // Return the max sliding window.
+    int[] maxSlidWithQueue(int[] nums, int k) {
+        Deque<Integer> q = new ArrayDeque<Integer>();
+        int[] res = new int[nums.length - k + 1];
+        int c = 0;
+        for (int j = 0; j < nums.length; j++) {
+            while (!q.isEmpty() && nums[q.getLast()] <= nums[j]) {
+                q.removeLast();
+            }
+            q.addLast(j);
+            if (q.getFirst() == j - k) {
+                q.removeFirst();
+            }
+            if (j >= k - 1)
+                res[c++] = nums[q.peek()];
+        }
+        return res;
+    }
+
+    int[] maxSlidingWindow(int[] nums, int k) {
+        int i = 0, c = 0;
+        int[] res = new int[nums.length - k + 1];
+        PriorityQueue<Integer> q = new PriorityQueue<>((a, b) -> b - a);
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for (int j = 0; j < nums.length; j++) {
+            q.add(nums[j]);
+            if (j - i + 1 > k) {
+                map.put(nums[i], map.getOrDefault(nums[i], 0) + 1);
+                i++;
+            }
+
+            while (map.containsKey(q.peek())) {
+                int cur = q.poll();
+                map.put(cur, map.get(cur) - 1);
+                if (map.get(cur) == 0)
+                    map.remove(cur);
+            }
+
+            if (j - i + 1 == k)
+                res[c++] = q.peek();
+        }
+
+        return res;
+
+    }
+
     // Longest Substring Without Repeating Characters
     int lengthOfLongestSubstring(String s) {
         if (s == null || s.length() == 0)
@@ -240,5 +321,92 @@ public class StringSolutions {
         }
 
         return maxLength == Integer.MIN_VALUE ? 0 : maxLength;
+    }
+
+
+    int[] closestStores(int[] houses, int[] stores) {
+        Arrays.sort(stores);
+        int[] result = new int[houses.length];
+        Arrays.fill(result, Integer.MAX_VALUE);
+        for (int i = 0; i < houses.length; i++) {
+            int lo = 0;
+            int hi = stores.length - 1;
+            while (lo <= hi) {
+                int middle = (lo + hi) / 2;
+                if (result[i] == Integer.MAX_VALUE || Math.abs(stores[middle] - houses[i]) < Math.abs(result[i] - houses[i]))
+                    result[i] = stores[middle];
+                if (houses[i] < stores[middle]) hi = middle - 1;
+                else lo = middle + 1;
+            }
+        }
+        return result;
+    }
+
+    int[] nearestStores(int[] houses, int[] stores) {
+        TreeSet<Integer> treeset = new TreeSet<>();
+        int lenH = houses.length;
+        if (stores.length == 0) return new int[0];
+        for (int store : stores)
+            treeset.add(store);
+
+        int[] res = new int[lenH];
+        for (int i = 0; i < lenH; ++i) {
+            int val = houses[i];
+            Integer left = treeset.floor(val), right = treeset.ceiling(val);
+            if (left == null || right == null)
+                res[i] = left == null ? right : left;
+            else
+                res[i] = (val - left <= right - val) ? left : right;
+        }
+        return res;
+    }
+
+
+    // Given an int array nums of length n. Split it into strictly decreasing subsequences.
+    // Output the min number of subsequences you can get by splitting.
+    int decreasingSubSeq(int[] arr) {
+        int[] piles = new int[arr.length];
+        int size = 0;
+        for (int num : arr) {
+            int l = 0, r = size;
+            while (l < r) {
+                int mid = (l + r) / 2;
+                if (num >= piles[mid])
+                    l = mid + 1;
+                else
+                    r = mid;
+            }
+
+            piles[l] = num;
+
+            if (l == size)
+                size++;
+        }
+
+        return size;
+
+    }
+
+    // There are n guests who are invited to a party. The k-th guest will
+    // attend the party at time S[k] and leave the party at time E[k].
+    //Given an integer array S and an integer array E, both of length n,
+    // return an integer denoting the minimum number of chairs you need such that everyone attending the party can sit down.
+
+    int minChairs(int[] S, int[] E) {
+        Arrays.sort(S);
+        Arrays.sort(E);
+
+        int i = 0, j = 0, chairs = 1, count = 0;
+        while (i < S.length) {
+            if (S[i] < E[j]) {
+                chairs = Math.max(chairs, count++);
+                i++;
+            } else {
+                count--;
+                j++;
+            }
+        }
+
+        return chairs;
     }
 }

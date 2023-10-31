@@ -10,9 +10,7 @@ import java.util.PriorityQueue;
 // in the class is even, the median will be the average of the middle two numbers.
 public class HeapMedianStream {
     PriorityQueue<Integer> minHeap = new PriorityQueue<>();
-    ;
     PriorityQueue<Integer> maxHeap = new PriorityQueue<>(Collections.reverseOrder());
-    ;
 
     void insertNum(int num) {
         if (minHeap.isEmpty() && maxHeap.isEmpty()) {

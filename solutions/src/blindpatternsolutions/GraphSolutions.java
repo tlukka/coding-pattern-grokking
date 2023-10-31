@@ -2,6 +2,7 @@ package blindpatternsolutions;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -90,10 +91,7 @@ public class GraphSolutions {
                 char c1 = prevWord.charAt(k);
                 char c2 = currWord.charAt(k);
                 if (c1 != c2) {
-                    if (!adjMap.containsKey(c1)) {
-                        adjMap.put(c1, new ArrayList<>());
-                    }
-                    adjMap.get(c1).add(c2);
+                    adjMap.computeIfAbsent(c1, val -> new ArrayList<>()).add(c2);
                     indegree[c2 - 'a']++;
                     break;
                 }
@@ -117,9 +115,7 @@ public class GraphSolutions {
         while (!minHeap.isEmpty()) {
             char currChar = minHeap.poll();
             topSort += currChar;
-            if (adjMap.get(currChar) == null)
-                continue;
-            for (char neighbor : adjMap.get(currChar)) {
+            for (char neighbor : adjMap.getOrDefault(currChar, Collections.emptyList())) {
                 indegree[neighbor - 'a']--;
                 if (indegree[neighbor - 'a'] == 0)
                     minHeap.add(neighbor);
@@ -136,7 +132,6 @@ public class GraphSolutions {
         Set<Integer> set = new HashSet<>();
         for (int i = 0; i < nums.length; i++)
             set.add(nums[i]);
-
         int longestSequence = 0;
         for (int num : set) {
             if (!set.contains(num - 1)) {
@@ -262,5 +257,41 @@ public class GraphSolutions {
         }
 
         return coursesEnrolled == numCourses;
+    }
+
+    // https://leetcode.com/problems/minimum-number-of-visited-cells-in-a-grid
+    // Minimum Number of Visited Cells in a Grid
+    int minimumCellsVisited(int[][] grid) {
+        // Dijkstra Algoritham to use here....
+        int n = grid.length, m = grid[0].length;
+        int[][] dist = new int[n][m];
+        for (int[] r : dist) {
+            Arrays.fill(r, Integer.MAX_VALUE);
+        }
+
+        Queue<int[]> q = new LinkedList<>();
+        q.add(new int[]{0, 0, dist[0][0]}); // start cells, dist.
+        while (!q.isEmpty()) {
+            int[] curr = q.poll();
+            int i = curr[0], j = curr[1];
+            // checking condition
+            if (dist[i][j] < curr[2] || dist[n - 1][m - 1] <= curr[2])
+                continue;
+            // Loops
+            for (int k = j + 1; k < grid[i][j] + 1 && k < m; k++) {
+                if (dist[i][k] > dist[i][j] + 1 && dist[n - 1][m - 1] > dist[i][j] + 1) {
+                    dist[i][k] = dist[i][j] + 1;
+                    q.add(new int[]{i, k, dist[i][k]});
+                }
+            }
+
+            for (int k = i + 1; k < grid[i][j] + 1 && k < n; k++) {
+                if (dist[k][j] > dist[i][j] + 1 && dist[n - 1][m - 1] > dist[i][j] + 1) {
+                    dist[k][j] = dist[i][j] + 1;
+                    q.add(new int[]{k, j, dist[k][j]});
+                }
+            }
+        }
+        return dist[n - 1][m - 1] == Integer.MAX_VALUE ? -1 : dist[n - 1][m - 1];
     }
 }

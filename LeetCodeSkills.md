@@ -15,6 +15,8 @@ https://leetcode.com/discuss/general-discussion/937307/iterative-recursive-dfs-b
 
 ### Graph Algorithms 
 https://leetcode.com/discuss/general-discussion/969327/graph-algorithms-one-place-dijkstra-bellman-ford-floyd-warshall-prims-kruskals-dsu
+https://www.geeksforgeeks.org/top-50-graph-coding-problems-for-interviews/#
+https://leetcode.com/discuss/general-discussion/655708/Graph-For-Beginners-Problems-or-Pattern-or-Sample-Solutions
 
 ### Binary Search 
 https://leetcode.com/discuss/general-discussion/786126/python-powerful-ultimate-binary-search-template-solved-many-problems \
@@ -44,6 +46,7 @@ https://leetcode.com/problems/sum-of-two-integers/solutions/84278/A-summary:-how
 ### System Design
 https://leetcode.com/discuss/career/229177/my-system-design-template \
 https://leetcode.com/discuss/interview-question/1140451/helpful-list-of-leetcode-posts-on-system-design-at-facebook-google-amazon-uber-microsoft
+https://systemdesign.one/system-design-interview-cheatsheet
 
 ### General Discussions
 https://hackernoon.com/a-better-way-to-pass-technical-interviews
@@ -57,6 +60,7 @@ https://leetcode.com/discuss/general-discussion/2012853/my-solutions-of-leetcode
 https://leetcode.com/discuss/general-discussion/2104474/my-solutions-of-leetcode-top-interview-questions
 https://leetcode.com/discuss/general-discussion/1868912/My-Leetcode-Solutions-All-In-One
 
+https://github.com/pratikn0708/leetcode-company-wise-questions/tree/master
 ### Facebook Questions 
 https://leetcode.com/discuss/interview-question/675445/facebook-interview-experiences-all-combined-from-lc-till-date-07-jun-2020
 
@@ -66,3 +70,33 @@ https://leetcode.com/discuss/interview-question/675445/facebook-interview-experi
 https://shekhargulati.com/2019/09/05/system-design-design-the-amazon-recently-viewed-items-page-api/ \
 https://www.youtube.com/watch?v=WE9c9AZe-DY
 
+
+### Linked Pages
+https://github.com/ashishps1/awesome-leetcode-resources
+https://github.com/ashishps1/awesome-system-design-resources
+
+https://leetcode.com/problems/frequency-of-the-most-frequent-element/discuss/1175088/C++-Maximum-Sliding-Window-Cheatsheet-Template/
+https://medium.com/leetcode-patterns/leetcode-pattern-2-sliding-windows-for-strings-e19af105316b
+https://leetcode.com/discuss/study-guide/1688903/Solved-all-two-pointers-problems-in-100-days
+https://leetcode.com/problems/minimum-window-substring/discuss/26808/Here-is-a-10-line-template-that-can-solve-most-'substring'-problems/
+https://leetcode.com/discuss/study-guide/937307/Iterative-or-Recursive-or-DFS-and-BFS-Tree-Traversal-or-In-Pre-Post-and-LevelOrder-or-Views
+https://medium.com/leetcode-patterns/leetcode-pattern-0-iterative-traversals-on-trees-d373568eb0ec
+https://leetcode.com/discuss/study-guide/458695/Dynamic-Programming-Patterns
+https://leetcode.com/discuss/study-guide/786126/Python-Powerful-Ultimate-Binary-Search-Template.-Solved-many-problems
+https://leetcode.com/discuss/study-guide/2347639/A-comprehensive-guide-and-template-for-monotonic-stack-based-problems
+https://leetcode.com/discuss/study-guide/3901862/All-Types-of-Patterns-for-Bits-Manipulations-and-How-to-use-it
+https://leetcode.com/discuss/study-guide/655708/Graph-For-Beginners-Problems-or-Pattern-or-Sample-Solutions
+https://medium.com/leetcode-patterns/leetcode-pattern-1-bfs-dfs-25-of-the-problems-part-1-519450a84353
+https://medium.com/leetcode-patterns/leetcode-pattern-2-dfs-bfs-25-of-the-problems-part-2-a5b269597f52
+https://hackernoon.com/14-patterns-to-ace-any-coding-interview-question-c5bb3357f6ed
+https://www.designgurus.io/course-play/grokking-the-coding-interview/doc/64865387eaaadd1855385848
+https://www.designgurus.io/blog/Grokking-the-Coding%20Interview-Patterns
+
+https://habr.com/en/articles/714954/
+https://habr.com/en/articles/716182/
+http://dimafeng.com/2016/12/04/distributed-systems/
+https://systemdesign.one/system-design-interview-cheatsheet/
+https://levelup.gitconnected.com/12-microservices-pattern-i-wish-i-knew-before-the-system-design-interview-5c35919f16a2
+
+https://dev.to/kumarkalyan/top-5-github-repositories-to-achieve-system-design-mastery-27n4
+https://github.com/ByteByteGoHq/system-design-101

@@ -2,10 +2,16 @@ package grokkingpattern;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class GraphSolutions {
 
@@ -970,6 +976,311 @@ public class GraphSolutions {
         }
     }
 
+    // Employee Importance
+    // https://leetcode.com/problems/employee-importance
+
+    int getImportanceByBfs(List<Employee> employees, int id) {
+        Queue<Employee> queue = new LinkedList<>();
+        HashMap<Integer, Employee> map = new HashMap<>();
+        for (Employee emp : employees)
+            map.put(emp.id, emp);
+
+        queue.add(map.get(id));
+        int totalImportance = 0;
+        while (!queue.isEmpty()) {
+            Employee cuEmp = queue.poll();
+            totalImportance += cuEmp.importance;
+            for (int subId : cuEmp.subordinates) {
+                queue.add(map.get(subId));
+            }
+        }
+
+        return totalImportance;
+    }
+
+    int getImportanceDfs(List<Employee> employees, int id) {
+        HashMap<Integer, Employee> map = new HashMap<>();
+        for (Employee emp : employees)
+            map.put(emp.id, emp);
+        return dfsImportance(map, id);
+    }
+
+    int dfsImportance(HashMap<Integer, Employee> map, int id) {
+        int importance = map.get(id).importance;
+        List<Integer> subList = map.get(id).subordinates;
+        for (int i : subList) {
+            importance += dfsImportance(map, i);
+        }
+
+        return importance;
+    }
+
+    // Max Area of Island
+    // https://leetcode.com/problems/max-area-of-island
+
+    int size = 0;
+
+    int maxAreaOfIsland(int[][] grid) {
+        int result = 0, size = 0;
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[0].length; j++) {
+                if (grid[i][j] == 1) {
+                    dfsMaxIsland(grid, i, j);
+                }
+                result = Math.max(result, size);
+                size = 0; // resetting size.
+            }
+        }
+        return result;
+    }
+
+    void dfsMaxIsland(int[][] grid, int r, int c) {
+        if (r >= 0 && r < grid.length && c >= 0 && c < grid[0].length && grid[r][c] == 1) {
+            size++;
+            grid[r][c] = 0;
+            for (int[] dr : dirs) {
+                dfsMaxIsland(grid, dr[0] + r, dr[1] + c);
+            }
+        }
+    }
+
+    // Accounts Merge
+    // https://leetcode.com/problems/accounts-merge
+    List<List<String>> accountsMerge(List<List<String>> accounts) {
+        // Build graph...
+        Map<String, Set<String>> graph = new HashMap<>();
+        Map<String, String> owner = new HashMap<>();
+        for (List<String> account : accounts) {
+            String userName = account.get(0);
+            Set<String> neghibours = new HashSet<>(account);
+            neghibours.remove(userName);
+
+            for (int i = 1; i < account.size(); i++) {
+                String email = account.get(i);
+                if (!graph.containsKey(email)) {
+                    graph.put(email, new HashSet<>());
+                }
+                graph.get(email).addAll(neghibours);
+                owner.put(email, userName);
+            }
+        }
+
+        Set<String> visited = new HashSet<>();
+        List<List<String>> results = new ArrayList<>();
+        // DFS
+        for (String email : owner.keySet()) {
+            if (!visited.contains(email)) {
+                List<String> res = new ArrayList<>();
+                dfsAccount(graph, visited, res, email);
+                Collections.sort(res);
+                res.add(0, owner.get(email)); // adding user name first index..
+                results.add(res);
+            }
+        }
+
+        return results;
+    }
+
+    void dfsAccount(Map<String, Set<String>> graph, Set<String> visited, List list, String email) {
+        list.add(email);
+        visited.add(email);
+        for (String neghibour : graph.get(email)) {
+            if (!visited.contains(neghibour)) {
+                dfsAccount(graph, visited, list, neghibour);
+            }
+        }
+    }
+
+    // Accounts merging using Union Find apporach...
+    List<List<String>> emailAccountMerges(List<List<String>> accounts) {
+        Map<String, String> owner = new HashMap<>();
+        Map<String, String> parents = new HashMap<>();
+        Map<String, TreeSet<String>> unions = new HashMap<>();
+
+        for (List<String> acc : accounts) {
+            String userName = acc.get(0);
+            for (int i = 1; i < acc.size(); i++) {
+                parents.put(acc.get(i), acc.get(i));
+                owner.put(acc.get(i), userName);
+            }
+        }
+
+        for (List<String> acc : accounts) {
+            String p1 = find(acc.get(1), parents); // finding parent..
+            for (int i = 2; i < acc.size(); i++) {
+                parents.put(find(acc.get(i), parents), p1);
+            }
+        }
+
+        for (List<String> acc : accounts) {
+            String p1 = find(acc.get(1), parents); // finding parent..
+            if (!unions.containsKey(p1)) {
+                unions.put(p1, new TreeSet<>());
+            }
+            for (int i = 1; i < acc.size(); i++) {
+                unions.get(p1).add(acc.get(i));
+            }
+        }
+
+        List<List<String>> result = new ArrayList<>();
+        for (String p : unions.keySet()) {
+            List<String> emails = new ArrayList<>(unions.get(p));
+            emails.add(0, owner.get(p)); // adding user name at first index...
+            result.add(emails);
+        }
+        return result;
+    }
+
+    String find(String s, Map<String, String> p) {
+        return p.get(s) == s ? s : find(p.get(s), p);
+    }
+
+    // Evaluate Division
+    // https://leetcode.com/problems/evaluate-division
+    // Input: equations = [["a","b"],["b","c"]], values = [2.0,3.0], queries = [["a","c"],["b","a"],["a","e"],["a","a"],["x","x"]]
+    //Output: [6.00000,0.50000,-1.00000,1.00000,-1.00000]
+    double[] calcEquation(List<List<String>> equations, double[] values, List<List<String>> queries) {
+        // Build graph
+        Map<String, Map<String, Double>> graph = new HashMap<>();
+        for (int i = 0; i < equations.size(); i++) {
+            String u = equations.get(i).get(0);
+            String v = equations.get(i).get(1);
+            graph.putIfAbsent(u, new HashMap<>());
+            graph.get(u).put(v, values[i]);
+            graph.putIfAbsent(v, new HashMap<>());
+            graph.get(v).put(u, 1 / values[i]);
+        }
+
+        double[] ans = new double[queries.size()];
+        for (int i = 0; i < queries.size(); i++) {
+            ans[i] = dfsCalEqu(queries.get(i).get(0), queries.get(i).get(1), new HashSet<>(), graph);
+        }
+        return ans;
+
+    }
+
+    double dfsCalEqu(String src, String dest, Set<String> visited, Map<String, Map<String, Double>> graph) {
+        // source deosn't exist -1
+        if (!graph.containsKey(src)) {
+            return -1.0;
+        }
+        if (graph.get(src).containsKey(dest))
+            return graph.get(src).get(dest);
+        visited.add(src);
+        for (Map.Entry<String, Double> nbr : graph.get(src).entrySet()) {
+            if (!visited.contains(nbr.getKey())) {
+                double weight = dfsCalEqu(nbr.getKey(), dest, visited, graph);
+                if (weight != -1.0)
+                    return weight * nbr.getValue();
+            }
+        }
+
+        return -1.0;
+    }
+
+    // Surrounded Regions
+    //https://leetcode.com/problems/surrounded-regions/
+
+    int n, m;
+
+    public void solve(char[][] board) {
+        n = board.length;
+        m = board[0].length;
+        // process boarders (first row, last row, fist col, last col)...
+
+        boolean[][] visited = new boolean[n][m];
+        for (int c = 0; c < m; c++) {
+            if (board[0][c] == 'O' && visited[0][c] != true)
+                dfsSurrounded(board, visited, 0, c);
+            if (board[n - 1][c] == 'O' && !visited[n - 1][c]) {
+                dfsSurrounded(board, visited, n - 1, c);
+            }
+        }
+
+        for (int r = 0; r < n; r++) {
+            if (board[r][0] == '0' && !visited[r][0])
+                dfsSurrounded(board, visited, r, 0);
+            if (board[r][m - 1] == 'O' && !visited[r][m - 1]) {
+                dfsSurrounded(board, visited, r, m - 1);
+            }
+        }
+
+        // process grid now...
+
+        for (int r = 0; r < n; r++) {
+            for (int c = 0; c < m; c++) {
+                if (board[r][c] == 'O' && !visited[r][c])
+                    board[r][c] = 'X';
+            }
+        }
+    }
+
+    void dfsSurrounded(char[][] board, boolean[][] visited, int r, int c) {
+        visited[r][c] = true;
+        for (int[] dir : dirs) {
+            int nr = dir[0] + r, nc = dir[1] + c;
+            if (nr >= 0 && nr < n && nc >= 0 && nc < m && board[nr][nc] == 'O' && !visited[nr][nc]) {
+                dfsSurrounded(board, visited, nr, nc);
+            }
+        }
+    }
+
+    // Redundant Connection
+    // https://leetcode.com/problems/redundant-connection/
+
+    int[] parent;
+
+    public int[] findRedundantConnection(int[][] edges) {
+        parent = new int[edges.length + 1];
+        for (int i = 0; i < parent.length; i++) {
+            parent[i] = i;
+        }
+
+        for (int[] e : edges) {
+            if (find(e[0]) == find(e[1])) {
+                return e;
+            }
+            union(e[0], e[1]);
+        }
+        return new int[]{-1, -1};
+    }
+
+    int find(int x) {
+        while (x != parent[x]) {
+            x = parent[x];
+        }
+        return x;
+    }
+
+    void union(int x, int y) {
+        int nx = find(x), ny = find(y);
+        if (nx != ny)
+            parent[ny] = nx;
+    }
+
+    // wallsAndGates
+    // https://www.lintcode.com/problem/663/
+    // https://leetcode.com/problems/walls-and-gates/
+
+    void wallsAndGates(int[][] rooms) {
+        if (rooms == null || rooms.length == 0)
+            return;
+        for (int r = 0; r < rooms.length; r++) {
+            for (int c = 0; c < rooms[0].length; c++) {
+                if (rooms[r][c] == 0)
+                    dfsWallsAndGates(rooms, r, c, 0);
+            }
+        }
+    }
+
+    void dfsWallsAndGates(int[][] room, int r, int c, int dist) {
+        if (r < 0 || r >= room.length || c < 0 || c >= room[0].length || room[r][c] < dist)
+            return;
+        room[r][c] = Math.min(room[r][c], dist);
+        for (int[] dir : dirs) {
+            dfsWallsAndGates(room, r + dir[0], c + dir[1], dist + 1);
+        }
+    }
 }
 
 class Pair implements Comparable<Pair> {
@@ -985,4 +1296,10 @@ class Pair implements Comparable<Pair> {
     public int compareTo(Pair o) {
         return Integer.compare(this.dist, o.dist);
     }
+}
+
+class Employee {
+    public int id;
+    public int importance;
+    public List<Integer> subordinates;
 }

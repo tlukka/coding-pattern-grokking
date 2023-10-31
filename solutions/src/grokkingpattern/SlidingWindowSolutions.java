@@ -146,7 +146,9 @@ public class SlidingWindowSolutions {
         PriorityQueue<Character> minHeap = new PriorityQueue<>((a, b) -> freqMap.get(b) - freqMap.get(a));
         minHeap.addAll(freqMap.keySet());
         int longestKSubString = 0;
-        if (minHeap.size() < k) return longestKSubString;
+        if (minHeap.size() < k)
+            return longestKSubString;
+
         while (k-- > 0) {
             longestKSubString += freqMap.get(minHeap.poll());
         }
@@ -162,7 +164,8 @@ public class SlidingWindowSolutions {
             while (freqMap.size() > k) {
                 char ch_start = S.charAt(start);
                 freqMap.put(ch_start, freqMap.get(ch_start) - 1);
-                if (freqMap.get(ch_start) == 0) freqMap.remove(ch_start);
+                if (freqMap.get(ch_start) == 0)
+                    freqMap.remove(ch_start);
                 start++;
             }
             if (freqMap.size() == k) {

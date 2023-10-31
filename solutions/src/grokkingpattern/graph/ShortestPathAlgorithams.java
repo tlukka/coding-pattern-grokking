@@ -1,13 +1,12 @@
 package grokkingpattern.graph;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.PriorityQueue;
 
 public class ShortestPathAlgorithams {
     public static void main(String[] args) {
-        DVertex v0 = new DVertex("A");
+        /*DVertex v0 = new DVertex("A");
         DVertex v1 = new DVertex("B");
         DVertex v2 = new DVertex("C");
         DVertex v3 = new DVertex("D");
@@ -122,7 +121,92 @@ public class ShortestPathAlgorithams {
         fx.computePath(arbitrageList.get(0));
         fx.printCycle();
 
+         */
+
+
+        int V = 4;
+        int[][] graph = {{0, 3, Integer.MAX_VALUE, 7},
+                {8, 0, 2, Integer.MAX_VALUE},
+                {5, Integer.MAX_VALUE, 0, 1},
+                {2, Integer.MAX_VALUE, Integer.MAX_VALUE, 0}};
+        FloydWarshallAlgoritham fly = new FloydWarshallAlgoritham(graph, V);
+        fly.floydWarshall(V);
+        System.out.print("Shortest path from 1 to 3: ");
+        List<Integer> path = fly.constructPath(1, 3);
+        fly.printPath(path);
+        System.out.print("Shortest path from 0 to 2: ");
+        path = fly.constructPath(0, 2);
+        fly.printPath(path);
+
+        // Path from node 3 to 2
+        System.out.print("Shortest path from 3 to 2: ");
+        path = fly.constructPath(3, 2);
+        fly.printPath(path);
+
     }
+}
+
+
+class FloydWarshallAlgoritham {
+    int maxNode = 100;
+    int[][] distance = new int[maxNode][maxNode];
+    int[][] nextElement = new int[maxNode][maxNode];
+
+    public FloydWarshallAlgoritham(int[][] graph, int V) {
+        for (int i = 0; i < V; i++) {
+            for (int j = 0; j < V; j++) {
+                // No edge between node i and j
+                if (graph[i][j] == Integer.MAX_VALUE)
+                    nextElement[i][j] = -1;
+                else
+                    nextElement[i][j] = j;
+
+                distance[i][j] = graph[i][j];
+            }
+        }
+    }
+
+    List<Integer> constructPath(int u, int v) {
+        // If there's no path between node u and v, simply return an empty array
+        if (nextElement[u][v] == -1)
+            return null;
+        List<Integer> path = new ArrayList<>();
+        path.add(u);
+        while (u != v) {
+            u = nextElement[u][v];
+            path.add(u);
+        }
+
+        return path;
+    }
+
+    // Standard Floyd Warshall Algorithm with little modification Now if we find
+    //that dis[i][j] > dis[i][k] + dis[k][j]  then we modify next[i][j] = next[i][k]
+
+    void floydWarshall(int V) {
+        for (int k = 0; k < V; k++) {
+            for (int i = 0; i < V; i++)
+                for (int j = 0; j < V; j++) {
+                    if (distance[i][k] == Integer.MAX_VALUE || distance[k][j] == Integer.MAX_VALUE)
+                        continue;
+
+                    if (distance[i][j] > distance[i][k] + distance[k][j]) {
+                        distance[i][j] = distance[i][k] + distance[k][j];
+                        nextElement[i][j] = nextElement[i][k];
+                    }
+
+                }
+        }
+
+    }
+
+    void printPath(List<Integer> path) {
+        int n = path.size();
+        for (int i = 0; i < n - 1; i++)
+            System.out.print(path.get(i) + " -> ");
+        System.out.print(path.get(n - 1) + "\n");
+    }
+
 }
 
 class ForexImplementation {
@@ -167,12 +251,13 @@ class ForexImplementation {
             }
         }
     }
+
     public void printCycle() {
-        if( this.cycleList != null ){
-            for(DVertex vertex : this.cycleList){
+        if (this.cycleList != null) {
+            for (DVertex vertex : this.cycleList) {
                 System.out.println(vertex);
             }
-        }else{
+        } else {
             System.out.println("No arbitrage opportunity...");
         }
     }
