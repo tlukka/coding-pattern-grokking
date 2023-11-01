@@ -41,6 +41,9 @@ https://levelup.gitconnected.com/grokking-the-coding-interview-pattern-island-dc
 ### Interval
 https://medium.com/codex/grokking-the-coding-interview-pattern-merge-interval-6e6b1e9e038c
 
+### Topical Sort 
+https://leetcode.com/tag/topological-sort/
+
 ### Bit Manipulation
 https://leetcode.com/problems/sum-of-two-integers/solutions/84278/A-summary:-how-to-use-bit-manipulation-to-solve-problems-easily-and-efficiently/
 ### System Design
@@ -100,3 +103,9 @@ https://levelup.gitconnected.com/12-microservices-pattern-i-wish-i-knew-before-t
 
 https://dev.to/kumarkalyan/top-5-github-repositories-to-achieve-system-design-mastery-27n4
 https://github.com/ByteByteGoHq/system-design-101
+
+
+https://leetcode.com/discuss/interview-question/1098600/Data-structureCNDBMSOSSystem-Design
+https://www.educative.io/blog/google-coding-interview-questions
+https://grokkingtechinterview.com/cracking-the-top-40-facebook-coding-interview-questions-185bab32489f
+https://aaronice.gitbook.io/lintcode/ all questions with explanation 

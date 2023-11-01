@@ -3,6 +3,8 @@ package grokkingpattern.google.dp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.PriorityQueue;
+import java.util.TreeMap;
 
 public class Solutions {
 
@@ -420,44 +422,790 @@ public class Solutions {
     // https://leetcode.com/problems/longest-increasing-path-in-a-matrix/
     //  Longest Increasing Path in a Matrix
     int longestIncreasingPath(int[][] matrix) {
-        int n=matrix.length, m=matrix[0].length;
-        int[][] dp=new int[n][m];
-        for(int[] d: dp)
+        int n = matrix.length, m = matrix[0].length;
+        int[][] dp = new int[n][m];
+        for (int[] d : dp)
             Arrays.fill(d, -1);
-        for(int i=0; i<n; i++) {
-            for(int j=0; j<m; j++) {
-                if(dp[i][j] ==-1) {
-                    dfsIncreasingPath(matrix,-1, i,j, dp);
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (dp[i][j] == -1) {
+                    dfsIncreasingPath(matrix, -1, i, j, dp);
                 }
             }
         }
 
         int maxPath = Integer.MIN_VALUE;
-        for(int[] d: dp) {
-            maxPath= Math.max(maxPath, Arrays.stream(d).max().getAsInt());
+        for (int[] d : dp) {
+            maxPath = Math.max(maxPath, Arrays.stream(d).max().getAsInt());
         }
         return maxPath;
     }
 
-    int[][] dirs = new int[][]{{-1,0}, {0,-1}, {0,1}, {1,0}};
+    int[][] dirs = new int[][]{{-1, 0}, {0, -1}, {0, 1}, {1, 0}};
+
     int dfsIncreasingPath(int[][] matrix, int parent, int r, int c, int[][] dp) {
-        if(r<0 || r>=matrix.length || c<0 || c>=matrix[0].length || matrix[r][c]<=parent)
+        if (r < 0 || r >= matrix.length || c < 0 || c >= matrix[0].length || matrix[r][c] <= parent)
             return 0;
         parent = matrix[r][c];
-        if(dp[r][c] !=-1)
+        if (dp[r][c] != -1)
             return dp[r][c];
 
         // back track
         int[] ans = new int[4];
-        for(int i=0; i<dirs.length; i++) {
-            ans[i]= dfsIncreasingPath(matrix,parent, r+dirs[i][0], c+dirs[i][1], dp);
+        for (int i = 0; i < dirs.length; i++) {
+            ans[i] = dfsIncreasingPath(matrix, parent, r + dirs[i][0], c + dirs[i][1], dp);
         }
-        return dp[r][c]= 1+Arrays.stream(ans).max().getAsInt();
+        return dp[r][c] = 1 + Arrays.stream(ans).max().getAsInt();
     }
 
-// https://www.geeksforgeeks.org/word-break-problem-trie-solution/
-// Given an input string and a dictionary of words, find out if the input string can be segmented into
-// a space-separated sequence of dictionary words
+    // Below are Knap Sack problems
 
+    // ->Subset sum
+    //->Equal sum partition
+    //->Count of subsets sum with a given sum
+    //->Minimum subset sum difference
+    //->Count the number of subset with a given difference
+    //->Target sum
+
+    // Bounded 0/1 Knapsack problems
+    //LC 416. Partition Equal Subset Sum
+    //LC 494. Target Sum
+    //LC 474. Ones and Zeroes
+    //LC 343. Integer Break
+
+    //Unbounded 0/1 Knapsack problems
+    //LC 322. Coin Change
+    //LC 518. Coin Change 2
+    //LC 377. Combination Sum IV
+    //LC 983. Minimum Cost For Tickets
+
+    // https://leetcode.com/problems/maximum-earnings-from-taxi/
+    // Maximum Earnings From Taxi
+    long maxTaxiEarnings(int n, int[][] rides) {
+        Arrays.sort(rides, (a, b) -> a[0] - b[0]);
+        PriorityQueue<long[]> queue = new PriorityQueue<>((a, b) -> Long.compare(a[0], b[0]));
+        long max = 0;
+        long maxProfit = 0;
+        for (int[] r : rides) {
+            int profit = r[1] - r[0] + r[2];
+            while (!queue.isEmpty() && r[0] > queue.peek()[0]) {
+                max = Math.max(max, queue.poll()[1]);
+            }
+            queue.offer(new long[]{r[1], profit + max});
+            maxProfit = Math.max(profit + max, maxProfit);
+        }
+        return maxProfit;
+    }
+
+    long maxEarningByDp(int n, int[][] rides) {
+        Arrays.sort(rides, (a, b) -> (a[1] - b[1]));
+        TreeMap<Integer, Long> dp = new TreeMap<>();
+        dp.put(0, 0L);
+        for (int[] r : rides) {
+            long curEarning = r[1] - r[0] + r[2] + dp.floorEntry(r[0]).getValue();
+            if (curEarning > dp.lastEntry().getValue())
+                dp.put(r[1], curEarning);
+        }
+        return dp.lastEntry().getValue();
+    }
+
+    // https://leetcode.com/problems/minimum-cost-for-tickets/
+    // Minimum Cost For Tickets
+    int mincostTicketsWithTreeMap(int[] days, int[] costs) {
+        TreeMap<Integer, Integer> dp = new TreeMap<>();
+        dp.put(-30, 0);
+
+        for (int day : days) {
+            int cur = Integer.MAX_VALUE;
+            cur = Math.min(cur, dp.get(dp.floorKey(day - 1)) + costs[0]);
+            cur = Math.min(cur, dp.get(dp.floorKey(day - 7)) + costs[1]);
+            cur = Math.min(cur, dp.get(dp.floorKey(day - 30)) + costs[2]);
+            dp.put(day, cur);
+        }
+
+        return dp.get(dp.lastKey());
+    }
+
+    int mincostTicketsWithDp(int[] days, int[] costs) {
+        int maxDay = days[days.length - 1];
+        boolean[] travelDays = new boolean[maxDay + 1];
+        for (int day : days) {
+            travelDays[day] = true;
+        }
+
+        int[] dp = new int[maxDay + 1];
+        dp[0] = 0;
+        for (int i = 1; i <= maxDay; i++) {
+            if (!travelDays[i]) {
+                dp[i] = dp[i - 1];
+                continue;
+            }
+            dp[i] = dp[i - 1] + costs[0];
+            dp[i] = Math.min(dp[i], dp[Math.max(0, i - 7)] + costs[1]);
+            dp[i] = Math.min(dp[i], dp[Math.max(0, i - 30)] + costs[2]);
+        }
+
+        return dp[maxDay];
+    }
+
+    // https://leetcode.com/problems/target-sum/description/
+    //  Target Sum
+    int findTargetSumWays(int[] nums, int target) {
+        int sum = Arrays.stream(nums).sum();
+        if ((sum - target) % 2 == 1 || target > sum)
+            return 0;
+        int n = nums.length;
+        int s2 = (sum - target) / 2;
+        int[][] dp = new int[n + 1][s2 + 1];
+        dp[0][0] = 1;
+        for (int i = 1; i < n + 1; i++) {
+            for (int j = 0; j < s2 + 1; j++) {
+                if (nums[i - 1] <= j)
+                    dp[i][j] = dp[i - 1][j] + dp[i - 1][j - nums[i - 1]];
+                else
+                    dp[i][j] = dp[i - 1][j];
+            }
+        }
+        return dp[n][s2];
+    }
+
+    // https://leetcode.com/problems/coin-change/
+    // Coin Change
+    int coinChange(int[] coins, int amount) {
+        int[] dp = new int[amount + 1];
+        for (int i = 1; i <= amount; i++) {
+            int min = Integer.MAX_VALUE;
+            for (int coin : coins) {
+                if (i - coin >= 0 && dp[i - coin] != -1) {
+                    min = Math.min(min, dp[i - coin]);
+                }
+            }
+            dp[i] = (min == Integer.MAX_VALUE) ? -1 : 1 + min;
+        }
+
+        return dp[amount];
+    }
+
+    // https://leetcode.com/problems/coin-change-ii/
+    // Coin Change II
+    int coinChangeII(int amount, int[] coins) {
+        int[] dp = new int[amount + 1];
+        dp[0] = 1;
+        for (int coin : coins) {
+            for (int i = coin; i <= amount; i++) {
+                dp[i] = dp[i - coin] + dp[i];
+            }
+        }
+        return dp[amount];
+    }
+
+    // https://leetcode.com/problems/combination-sum-iv/
+    // Combination Sum IV
+    int combinationSum4(int[] nums, int target) {
+        int[] dp = new int[target + 1];
+        dp[0] = 1;
+        for (int i = 1; i <= target; i++) {
+            for (int num : nums) {
+                if (i >= num) {
+                    dp[i] += dp[i - num];
+                }
+            }
+        }
+        return dp[target];
+
+    }
+
+    // https://leetcode.com/problems/integer-break/
+    //  Integer Break
+
+    int intergerBreakWithDp(int n) {
+        if (n <= 3) return n - 1;
+        int[] dp = new int[n + 1];
+        dp[2] = 2;
+        dp[3] = 3;
+        for (int i = 4; i <= n; i++) {
+            dp[i] = Math.max(dp[i - 2] * 2, dp[i - 3] * 3);
+        }
+        return dp[n];
+    }
+
+    int intergerBreakWithoutDp(int n) {
+        if (n == 2)
+            return 1;
+        if (n == 3)
+            return 2;
+
+        // divide n int many threes as possible
+        int threes = n / 3;
+        int reminder = n % 3;
+        if (reminder == 1) {
+            threes -= 1; // remove 3*1;
+            reminder = 4; // create 2*2;
+        } else if (reminder == 0) {
+            reminder = 1; //
+        }
+
+        return (int) (Math.pow(3, threes) * reminder);
+    }
+
+    //https://leetcode.com/problems/ones-and-zeroes/
+    //  Ones and Zeroes
+    int findMaxForm(String[] strs, int m, int n) {
+        int[][] dp = new int[m + 1][n + 1];
+        for (String s : strs) {
+            int zeros = 0, ones = 0;
+            for (char c : s.toCharArray()) {
+                if (c == '0')
+                    zeros++;
+                else
+                    ones++;
+            }
+            for (int i = m; i >= zeros; i--) {
+                for (int j = n; j >= ones; j--) {
+                    dp[i][j] = Math.max(dp[i][j], dp[i - zeros][j - ones] + 1);
+                }
+            }
+        }
+        return dp[m][n];
+    }
+
+    //https://leetcode.com/problems/partition-equal-subset-sum/
+    //Partition Equal Subset Sum
+    boolean canPartition(int[] nums) {
+        int sum = Arrays.stream(nums).sum();
+        if (sum % 2 != 0)
+            return false;
+        sum = sum / 2;
+        boolean[] dp = new boolean[sum + 1];
+        dp[0] = true;
+        for (int num : nums) {
+            for (int i = sum; i > 0; i--) {
+                if (i >= num) // means required sum greater than num in nums
+                    // dp[i] -  means if  num not inlcude
+                    // dp[i-num] -  means if num included , ans will now depend on value of i-num in dp
+                    dp[i] = dp[i] || dp[i - num];
+            }
+        }
+        return dp[sum];
+    }
+
+
+    // https://leetcode.com/problems/last-stone-weight-ii
+    // Last Stone Weight II
+    int lastStoneWeightII(int[] stones) {
+        int n = stones.length;
+        int sum = Arrays.stream(stones).sum();
+        int[] dp = new int[sum / 2 + 1];
+
+        for (int i = 1; i <= n; i++) {
+            int stone = stones[i - 1];
+            for (int j = sum / 2; j >= stone; j--) {
+                dp[j] = Math.max(dp[j], dp[j - stone] + stone);
+            }
+        }
+        return sum - 2 * dp[sum / 2];
+    }
+
+    // Given a set of positive integers and an integer k, check if there is any non-empty subset that sums to k.
+    // I/p A = { 7, 3, 2, 5, 8 } k = 14 and Output: Subset with the given sum exists Subset { 7, 2, 5 } sums to 14
+    static boolean subsetSum(int[] A, int k) {
+        int n = A.length;
+
+        // `T[i][j]` stores true if subset with sum `j` can be attained
+        // using items up to first `i` items
+        boolean[][] dp = new boolean[n + 1][k + 1];
+
+        // if the sum is zero
+        for (int i = 0; i <= n; i++) {
+            dp[i][0] = true;
+        }
+
+        // do for i'th item
+        for (int i = 1; i <= n; i++) {
+            // consider all sum from 1 to sum
+            for (int j = 1; j <= k; j++) {
+                // don't include the i'th element if `j-A[i-1]` is negative
+                if (A[i - 1] > j) {
+                    dp[i][j] = dp[i - 1][j];
+                } else {
+                    // find the subset with sum `j` by excluding or including
+                    // the i'th item
+                    dp[i][j] = dp[i - 1][j] || dp[i - 1][j - A[i - 1]];
+                }
+            }
+        }
+
+        // return maximum value
+        return dp[n][k];
+    }
+
+    // https://leetcode.com/problems/combination-sum
+    // Combination Sum
+    List<List<Integer>> combinationSum(int[] candidates, int target) {
+        List<List<Integer>>[] dp = new List[target + 1];
+        dp[0] = new ArrayList<>();
+        dp[0].add(new ArrayList<>());
+        for (int c : candidates) {
+            for (int i = c; i <= target; i++) {
+                if (dp[i - c] != null) {
+                    if (dp[i] == null)
+                        dp[i] = new ArrayList<>();
+                    for (List<Integer> list : dp[i - c]) {
+                        List<Integer> copy = new ArrayList<>(list);
+                        copy.add(c);
+                        dp[i].add(copy);
+                    }
+                }
+            }
+        }
+        return dp[target] == null ? new ArrayList<>() : dp[target];
+    }
+
+    // https://www.geeksforgeeks.org/count-ofdifferent-ways-express-n-sum-1-3-4/
+    // Count of different ways to express N as the sum of 1, 3 and 4
+    int countWays(int n) {
+        int[] dp = new int[n + 1];
+
+        // base cases
+        dp[0] = dp[1] = dp[2] = 1;
+        dp[3] = 2;
+
+        // iterate for all values from 4 to n
+        for (int i = 4; i <= n; i++)
+            dp[i] = dp[i - 1] + dp[i - 3] + dp[i - 4];
+
+        return dp[n];
+    }
+
+    int countWaysWithOutDp(int n) {
+        int dp_i = 0, dp_i_1, dp_i_2, dp_i_3, dp_i_4;
+
+        if (n == 0 || n == 1 || n == 2) return 1;
+        else if (n == 3) return 2;
+
+        // base cases
+        dp_i_4 = dp_i_3 = dp_i_2 = 1;
+        dp_i_1 = 2;
+
+        // iterate for all values from 4 to n
+        for (int i = 4; i <= n; i++) {
+            dp_i = dp_i_1 + dp_i_3 + dp_i_4;
+            // Updating Variable value so in next Iteration they become relevant
+            dp_i_4 = dp_i_3;
+            dp_i_3 = dp_i_2;
+            dp_i_2 = dp_i_1;
+            dp_i_1 = dp_i;
+        }
+
+        return dp_i;
+    }
+
+    // Partern 4: Palindromic sequences
+    // https://leetcode.com/problems/longest-palindromic-subsequence/
+    int longestPalindromeSubseq(String s) {
+        int n = s.length();
+        int[][] dp = new int[n + 1][n + 1];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                dp[i + 1][j + 1] = s.charAt(i) == s.charAt(n - 1 - j) ? dp[i][j] + 1 : Math.max(dp[i + 1][j], dp[i][j + 1]);
+            }
+        }
+        return dp[n][n];
+    }
+
+    // https://leetcode.com/problems/palindromic-substrings/
+    // Palindromic Substrings
+    int countSubstrings(String s) {
+        int count = 0;
+        if (s == null || s.length() == 0)
+            return count;
+
+        for (int i = 0; i < s.length(); i++) {
+            count += findPalindroms(s, i, i);
+            count += findPalindroms(s, i, i + 1);
+        }
+        return count;
+    }
+
+    int findPalindroms(String s, int left, int right) {
+        int count = 0;
+        while (left >= 0 && right < s.length() && s.charAt(left) == s.charAt(right)) {
+            count++;
+            left--;
+            right++;
+        }
+        return count;
+    }
+
+    // https://www.geeksforgeeks.org/minimum-number-deletions-make-string-palindrome
+    // Minimum number of deletions to make a string palindrome
+    int minimumNumberOfDeletions(String str) {
+        int n = str.length();
+        // Find longest palindromic subsequence
+        int len = longestPalindromicString(str);
+        // After removing characters other than the lps, we get palindrome.
+        return (n - len);
+    }
+
+    int longestPalindromicString(String str) {
+        int n = str.length();
+        int[][] dp = new int[n][n];
+
+        // Strings of length 1 are palindrome of length 1
+        for (int i = 0; i < n; i++)
+            dp[i][i] = 1;
+
+        // Build the table. Note that the lower diagonal values of table are useless and not filled in the process. c1 is length of substring
+        for (int cl = 2; cl <= n; cl++) {
+            for (int i = 0; i < n - cl + 1; i++) {
+                int j = i + cl - 1;
+                if (str.charAt(i) == str.charAt(j) && cl == 2)
+                    dp[i][j] = 2;
+                else if (str.charAt(i) == str.charAt(j))
+                    dp[i][j] = dp[i + 1][j - 1] + 2;
+                else
+                    dp[i][j] = Math.max(dp[i][j - 1], dp[i + 1][j]);
+            }
+        }
+
+        // length of longest palindromic subsequence
+        return dp[0][n - 1];
+    }
+
+    // https://leetcode.com/problems/minimum-insertion-steps-to-make-a-string-palindrome/
+    // Return the minimum number of steps to make s palindrome.
+    int minInsertions(String s) {
+        String s2 = new StringBuilder(s).reverse().toString();
+        int n = s.length();
+        int[][] dp = new int[n + 1][n + 1];
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j <= n; j++) {
+                dp[i][j] = (s.charAt(i - 1) == s2.charAt(j - 1)) ? 1 + dp[i - 1][j - 1] : Math.max(dp[i][j - 1], dp[i - 1][j]);
+            }
+        }
+
+        return n - dp[n][n];
+    }
+
+    // https://leetcode.com/problems/palindrome-partitioning-ii/
+    // Palindrome Partitioning II
+    // Given a string s, partition s such that every substring of the partition is a palindrome
+    //Return the minimum cuts needed for a palindrome partitioning of s.
+    int minCut(String s) {
+        char[] c = s.toCharArray();
+        int n = c.length;
+        int[] dp = new int[n];
+        boolean[][] pal = new boolean[n][n];
+        for (int i = 0; i < n; i++) {
+            int min = i;
+            for (int j = 0; j <= i; j++) {
+                if (c[j] == c[i] && (j + 1 > i - 1 || pal[j + 1][i - 1])) {
+                    pal[j][i] = true;
+                    min = j == 0 ? 0 : Math.min(min, dp[j - 1] + 1);
+                }
+            }
+            dp[i] = min;
+        }
+        return dp[n - 1];
+    }
+
+    // https://www.geeksforgeeks.org/longest-common-substring-dp-29/
+    // Longest Common Substring
+    int longestSubStr(char[] X, char[] Y, int m, int n) {
+        int[][] dp = new int[m + 1][n + 1];
+        int result = 0;
+        for (int i = 0; i <= m; i++) {
+            for (int j = 0; j <= n; j++) {
+                if (i == 0 || j == 0)
+                    dp[i][j] = 0;
+                else if (X[i - 1] == Y[j - 1]) {
+                    dp[i][j] = 1 + dp[i - 1][j - 1];
+                    result = Math.max(result, dp[i][j]);
+                } else {
+                    dp[i][j] = 0;
+                }
+            }
+        }
+
+        return result;
+    }
+
+    // Longest Common Subsequence
+    // https://leetcode.com/problems/longest-common-subsequence/
+    int longestCommonSubsequence(String text1, String text2) {
+        int m = text1.length();
+        int n = text2.length();
+        // Initialization of 2 Dimentional Array
+        int[][] dp = new int[m + 1][n + 1];
+        for (int index = 1; index <= m; index++) {
+            char letter1 = text1.charAt(index - 1);
+            for (int search = 1; search <= n; search++) {
+                char letter2 = text2.charAt(search - 1);
+                if (letter1 == letter2) {
+                    dp[index][search] = 1 + dp[index - 1][search - 1];
+                } else {
+                    dp[index][search] = Math.max(dp[index][search - 1], dp[index - 1][search]);
+                }
+            }
+        }
+        return dp[m][n];
+    }
+
+    // https://leetcode.com/problems/longest-increasing-subsequence/
+    //Longest Increasing Subsequence
+    int lengthOfLIS(int[] nums) {
+        if (nums == null || nums.length == 0) return 0;
+        if (nums.length == 1) return 1;
+        int[] dp = new int[nums.length];
+        Arrays.fill(dp, 1);
+        int ans = 0;
+        for (int i = 1; i < nums.length; i++) {
+            for (int j = 0; j <= i; j++) {
+                if (nums[j] < nums[i])
+                    dp[i] = Math.max(dp[i], dp[j] + 1);
+            }
+            //dp[i] = 1+currMax;
+            ans = Math.max(dp[i], ans);
+        }
+
+        return ans;
+    }
+
+    // Maximum Sum Increasing Subsequence
+    // https://www.geeksforgeeks.org/maximum-sum-increasing-subsequence-dp-14/
+    int maxSumIncreaseingequence(int[] arr, int n) {
+        int i, j, max = 0;
+        int[] msis = new int[n];
+        /* Initialize msis (Maximum Sum Increasing Subsequence)  values for all indexes */
+        for (i = 0; i < n; i++)
+            msis[i] = arr[i];
+        /* Compute maximum sum values  in bottom up manner */
+        for (i = 1; i < n; i++)
+            for (j = 0; j < i; j++)
+                if (arr[i] > arr[j] && msis[i] < msis[j] + arr[i])
+                    msis[i] = msis[j] + arr[i];
+
+        /* Pick maximum of all  msis values */
+        for (i = 0; i < n; i++)
+            if (max < msis[i])
+                max = msis[i];
+
+        return max;
+    }
+
+    // Minimum number of deletions to make a sorted sequence
+    // https://www.geeksforgeeks.org/minimum-number-deletions-make-sorted-sequence/
+    int minimumNumberOfDeletions(int[] arr, int n) {
+        // Find longest  increasing subsequence
+        int len = lengthOfIncreaseSequence(arr, n);
+
+        // After removing elements other than the lis, we get sorted sequence.
+        return (n - len);
+    }
+
+    // length of the longest increasing
+    int lengthOfIncreaseSequence(int[] arr, int n) {
+        int result = 0;
+        int[] lis = new int[n];
+
+        /* Initialize LIS values for all indexes */
+        for (int i = 0; i < n; i++)
+            lis[i] = 1;
+
+        /* Compute optimized LIS  values in bottom up manner */
+        for (int i = 1; i < n; i++)
+            for (int j = 0; j < i; j++)
+                if (arr[i] > arr[j] && lis[i] < lis[j] + 1)
+                    lis[i] = lis[j] + 1;
+
+        /* Pick result imum of all LIS values */
+        for (int i = 0; i < n; i++)
+            if (result < lis[i])
+                result = lis[i];
+
+        return result;
+    }
+
+    int minDeletions(int[] arr) {
+        int n = arr.length;
+        int[] lis = new int[n];
+        Arrays.fill(lis, 1); // Initialize the LIS array with all 1's
+
+        for (int i = 1; i < n; i++) {
+            for (int j = 0; j < i; j++) {
+                if (arr[i] > arr[j]) {
+                    lis[i] = Math.max(lis[i], lis[j] + 1);
+                }
+            }
+        }
+
+        return n - Arrays.stream(lis).max().getAsInt(); // Return the number of elements to delete
+    }
+
+    // https://www.geeksforgeeks.org/longest-repeating-subsequence/
+
+    int findLongestRepeatingSubSeq(String str) {
+        int n = str.length();
+
+        // Create and initialize DP table
+        int[][] dp = new int[n + 1][n + 1];
+
+        // Fill dp table (similar to LCS loops)
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j <= n; j++) {
+                // If characters match and indexes are not same
+                if (str.charAt(i - 1) == str.charAt(j - 1) && i != j)
+                    dp[i][j] = 1 + dp[i - 1][j - 1];
+
+                    // If characters do not match
+                else
+                    dp[i][j] = Math.max(dp[i][j - 1], dp[i - 1][j]);
+            }
+        }
+        return dp[n][n];
+    }
+
+    int findLongestRepeatingSubSeq(StringBuilder s1, int i, int j, int[][] dp) {
+        if (i >= s1.length() || j >= s1.length()) {
+            return 0;
+        }
+        if (dp[i][j] != -1) {
+            return dp[i][j];
+        }
+        if (dp[i][j] == -1) {
+            if (s1.charAt(i) == s1.charAt(j) && i != j) {
+                dp[i][j] = 1 + findLongestRepeatingSubSeq(s1, i + 1, j + 1, dp);
+            } else {
+                dp[i][j] = Math.max(findLongestRepeatingSubSeq(s1, i, j + 1, dp), findLongestRepeatingSubSeq(s1, i + 1, j, dp));
+            }
+        }
+        return dp[i][j];
+    }
+
+    // Find number of times a string occurs as a subsequence in given string
+    // https://www.geeksforgeeks.org/find-number-times-string-occurs-given-string/
+    // Given two strings, find the number of times the second string occurs in the first string,
+    // whether continuous or discontinuous.
+    int count(String a, String b) {
+        int m = a.length();
+        int n = b.length();
+        // Create a table to store results of sub-problems
+        int lookup[][] = new int[m + 1][n + 1];
+        // If first string is empty
+        for (int i = 0; i <= n; ++i)
+            lookup[0][i] = 0;
+        // If second string is empty
+        for (int i = 0; i <= m; ++i)
+            lookup[i][0] = 1;
+        // Fill lookup[][] in  bottom up manner
+        for (int i = 1; i <= m; i++) {
+            for (int j = 1; j <= n; j++) {
+                // If last characters are  same, we have two options -
+                // 1. consider last characters   of both strings in solution
+                // 2. ignore last character of first string
+                if (a.charAt(i - 1) == b.charAt(j - 1))
+                    lookup[i][j] = lookup[i - 1][j - 1] + lookup[i - 1][j];
+                else
+                    // If last character are   different, ignore last character of first string
+                    lookup[i][j] = lookup[i - 1][j];
+            }
+        }
+        return lookup[m][n];
+    }
+
+    // Longest Bitonic Subsequence
+    // https://www.geeksforgeeks.org/longest-bitonic-subsequence-dp-15/
+    int longestBitonicSubsequence(int[] arr, int n) {
+
+        /* Allocate memory for LIS[] and initialize LIS values as 1 for all indexes */
+        int[] lis = new int[n];
+        for (int i = 0; i < n; i++)
+            lis[i] = 1;
+
+        /* Compute LIS values from left to right */
+        for (int i = 1; i < n; i++)
+            for (int j = 0; j < i; j++)
+                if (arr[i] > arr[j] && lis[i] < lis[j] + 1)
+                    lis[i] = lis[j] + 1;
+
+        /* Allocate memory for lds and initialize LDS values for all indexes */
+        int[] lds = new int[n];
+        for (int i = 0; i < n; i++)
+            lds[i] = 1;
+
+        /* Compute LDS values from right to left */
+        for (int i = n - 2; i >= 0; i--)
+            for (int j = n - 1; j > i; j--)
+                if (arr[i] > arr[j] && lds[i] < lds[j] + 1)
+                    lds[i] = lds[j] + 1;
+
+
+        /* Return the maximum value of lis[i] + lds[i] - 1*/
+        int max = lis[0] + lds[0] - 1;
+        for (int i = 1; i < n; i++)
+            if (lis[i] + lds[i] - 1 > max)
+                max = lis[i] + lds[i] - 1;
+
+        return max;
+    }
+
+    // https://www.geeksforgeeks.org/longest-alternating-subsequence/
+    // Longest alternating subsequence
+    // Input: arr[] = {10, 22, 9, 33, 49, 50, 31, 60} Output: 6
+    //Explanation: The subsequences {10, 22, 9, 33, 31, 60} or {10, 22, 9, 49, 31, 60} or {10, 22, 9, 50, 31, 60}
+    // are longest subsequence of length 6
+    int longestAlertingSequence(int[] arr, int n) {
+
+        // "inc" and "dec" initialized as 1, as single element is still LAS
+        int inc = 1;
+        int dec = 1;
+        // Iterate from second element
+        for (int i = 1; i < n; i++) {
+
+            if (arr[i] > arr[i - 1]) {
+                // "inc" changes if "dec" changes
+                inc = dec + 1;
+            } else if (arr[i] < arr[i - 1]) {
+                // "dec" changes if "inc" changes
+                dec = inc + 1;
+            }
+        }
+        // Return the maximum length
+        return Math.max(inc, dec);
+    }
+
+    // https://leetcode.com/problems/edit-distance/
+    //Given two strings word1 and word2, return the minimum number of operations required to convert word1 to word2.
+    //You have the following three operations permitted on a word:
+    //Insert a character Delete a character Replace a character
+    int minDistanceDp(String word1, String word2) {
+        int n = word1.length(), m = word2.length();
+        int[][] dp = new int[n + 1][m + 1];
+
+        // Base cases
+        for (int i = 0; i <= n; i++) {
+            dp[i][0] = i;
+        }
+
+        for (int j = 0; j <= m; j++) {
+            dp[0][j] = j;
+        }
+
+        for (int r = 1; r <= n; r++) {
+            for (int c = 1; c <= m; c++) {
+                int insert = 0, update = 0, delete = 0;
+                if (word1.charAt(r - 1) == word2.charAt(c - 1)) {
+                    dp[r][c] = dp[r - 1][c - 1];
+                } else {
+                    insert = 1 + dp[r][c - 1];
+                    update = 1 + dp[r - 1][c];
+                    delete = 1 + dp[r - 1][c - 1];
+                    dp[r][c] = Math.min(insert, Math.min(update, delete));
+                }
+            }
+        }
+
+        return dp[n][m];
+    }
 
 }
