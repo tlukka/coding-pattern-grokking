@@ -410,8 +410,8 @@ public class DpSolutions {
         return epocDate;
     }
 
-    // Given a string s and a dictionary of strings wordDict, return true if s can be segmented
-    // into a space-separated sequence of one or more dictionary words.
+    // Given a string s and a dictionary of strings wordDict, return true if s can be segmented into a space-separated
+    // sequence of one or more dictionary words.
 
     boolean wordBreak(String s, List<String> wordDict) {
         int len = s.length();
@@ -465,7 +465,8 @@ public class DpSolutions {
         int ans = 0;
         for (int i = 1; i < nums.length; i++) {
             for (int j = 0; j <= i; j++) {
-                if (nums[j] < nums[i]) dp[i] = Math.max(dp[i], dp[j] + 1);
+                if (nums[j] < nums[i])
+                    dp[i] = Math.max(dp[i], dp[j] + 1);
             }
             ans = Math.max(ans, dp[i]);
         }
@@ -574,8 +575,6 @@ public class DpSolutions {
 
     // https://leetcode.com/problems/maximal-square
     // Maximal Square
-
-
     int maximalSquare(char[][] matrix) {
         int n = matrix.length, m = matrix[0].length, ans = 0;
         int[][] dp = new int[n][m];
@@ -609,7 +608,6 @@ public class DpSolutions {
 
     // https://leetcode.com/problems/distinct-subsequences
     // Distinct Subsequences
-
     int numDistinct(String s, String t) {
         return recursiveNumDistinct(s, t, 0, 0);
     }

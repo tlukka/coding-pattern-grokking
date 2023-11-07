@@ -2,8 +2,10 @@ package grokkingpattern.google.dp;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.PriorityQueue;
+import java.util.Set;
 import java.util.TreeMap;
 
 public class Solutions {
@@ -22,6 +24,9 @@ public class Solutions {
     }
 
     //https://www.geeksforgeeks.org/word-break-problem-dp-32
+    // https://leetcode.com/problems/word-break/
+    // Given a string s and a dictionary of strings wordDict, return true if s can be segmented into
+    // a space-separated sequence of one or more dictionary words.
     boolean wordBreakBF(List<String> wordList, String word) {
         if (word.isEmpty()) return true;
         int len = word.length();
@@ -40,9 +45,9 @@ public class Solutions {
         if (len == 0) return true;
         boolean[] dp = new boolean[len + 1];
         dp[0] = true;
-        for (int i = 0; i <= len; i++) {
+        for (int i = 1; i <= len; i++) {
             for (int j = 0; j < i; j++) {
-                if (!dp[j] && dictionaryContains(str.substring(j, i), dictionary)) {
+                if (dp[j] && dictionaryContains(str.substring(j, i), dictionary)) {
                     dp[i] = true;
                     break;
                 }
@@ -57,6 +62,62 @@ public class Solutions {
             if (dictionary[i].compareTo(word) == 0) return true;
         }
         return false;
+    }
+
+    boolean wordBreakDp(String s, List<String> wordDict) {
+        int len = s.length();
+        Set<String> set = new HashSet<>(wordDict);
+        boolean[] dp = new boolean[len + 1];
+        dp[0] = true;
+
+        for (int i = 1; i <= len; i++) {
+            for (int j = 0; j < i; j++) {
+                // Sub string
+                String temp = s.substring(j, i);
+                if (set.contains(temp) && dp[j]) {
+                    dp[i] = true;
+                    break;
+                }
+            }
+        }
+
+        return dp[len];
+    }
+
+    // https://leetcode.com/problems/word-break-ii/
+    // Given a string s and a dictionary of strings wordDict, add spaces in s to construct a sentence where
+    // each word is a valid dictionary word. Return all such possible sentences in any order.
+
+    List<String> wordBreak(String s, List<String> wordDict) {
+        List<List<String>> listOfResults = new ArrayList<>();
+        Set<String> hashSet = new HashSet<>(wordDict);
+        dfsBackTrack(listOfResults, new ArrayList<>(), hashSet, s, 0);
+        List<String> result = new ArrayList<>();
+        for (List<String> list : listOfResults) {
+            StringBuilder sb = new StringBuilder();
+            for (String str : list) {
+                if (sb.length() > 0)
+                    sb.append(" ");
+                sb.append(str);
+            }
+            result.add(sb.toString());
+        }
+        return result;
+    }
+
+    void dfsBackTrack(List<List<String>> result, List<String> list, Set<String> wordDict, String s, int start) {
+        if (start == s.length()) {
+            result.add(new ArrayList<>(list));
+        } else {
+            for (int i = start; i < s.length(); i++) {
+                String tempWord = s.substring(start, i + 1);
+                if (wordDict.contains(tempWord)) {
+                    list.add(tempWord);
+                    dfsBackTrack(result, list, wordDict, s, i + 1);
+                    list.remove(list.size() - 1);
+                }
+            }
+        }
     }
 
     // https://www.geeksforgeeks.org/word-break-problem-using-backtracking/
@@ -201,43 +262,12 @@ public class Solutions {
         return path(matrix, i, j + 1) + path(matrix, i + 1, j);
     }
 
-    int uniquePathsByDp(int[][] grid) {
-        int n = grid.length, m = grid[0].length;
-        int[][] dp = new int[n][m];
-        dp[0][0] = grid[0][0] == 0 ? 1 : 0;
-        // first row
-        for (int c = 1; c < m; c++) {
-            if (grid[0][c] == 1) {
-                dp[0][c] = 0;
-            } else {
-                dp[0][c] = dp[0][c - 1];
-            }
-        }
-        // first column
-        for (int r = 1; r < n; r++) {
-            if (grid[r][0] == 1) {
-                dp[r][0] = 0;
-            } else {
-                dp[r][0] = dp[r - 1][0];
-            }
-        }
-        for (int r = 1; r < n; r++) {
-            for (int c = 1; c < m; c++) {
-                if (grid[r][c] == 1) {
-                    dp[r][c] = 0;
-                } else {
-                    dp[r][c] = dp[r][c - 1] + dp[r - 1][c];
-                }
-            }
-        }
-        return dp[n - 1][m - 1];
-    }
-
-    int pathByDpSimplied(int[][] grid) {
+    int uniuePathByDpSimplied(int[][] grid) {
+        if (grid[0][0] == 1)
+            return 0;
         int n = grid.length, m = grid[0].length;
         int[][] dp = new int[n + 1][m + 1];
-        if (grid[0][0] != 1)
-            dp[1][1] = 1;
+        dp[1][1] = 1;
         for (int r = 1; r <= n; r++) {
             for (int c = 1; c <= m; c++) {
                 if (grid[r - 1][c - 1] != 1) {
@@ -274,21 +304,6 @@ public class Solutions {
     }
 
     //https://www.geeksforgeeks.org/stock-buy-sell/
-    ArrayList<ArrayList<Integer>> stockBuySell(int A[], int n) {
-        // code here
-        ArrayList<ArrayList<Integer>> result = new ArrayList<>();
-        for (int i = 1; i < n; i++) {
-            if (A[i] > A[i - 1]) {
-                ArrayList<Integer> temp = new ArrayList<>();
-                temp.add(i - 1);
-                temp.add(i);
-                result.add(temp);
-            }
-        }
-
-        return result;
-    }
-
     int maxProfit(int[] arr, int n) {
         int maxProfit = 0;
         for (int i = 1; i < n; i++) {
@@ -301,6 +316,7 @@ public class Solutions {
     // Given three strings A, B and C. Write a function that checks whether C is an interleaving of A and B.
     // C is said to be interleaving A and B,
     //https://www.geeksforgeeks.org/find-if-a-string-is-interleaved-of-two-other-strings-dp-33/#
+    // https://leetcode.com/problems/interleaving-string/
     boolean isInterleaved(String A, String B, String C) {
         if (A.isEmpty() && B.isEmpty() && C.isEmpty())
             return true;
@@ -481,7 +497,7 @@ public class Solutions {
 
     // https://leetcode.com/problems/maximum-earnings-from-taxi/
     // Maximum Earnings From Taxi
-    long maxTaxiEarnings(int n, int[][] rides) {
+    long maxTaxiEarnings(int[][] rides) {
         Arrays.sort(rides, (a, b) -> a[0] - b[0]);
         PriorityQueue<long[]> queue = new PriorityQueue<>((a, b) -> Long.compare(a[0], b[0]));
         long max = 0;
@@ -569,6 +585,27 @@ public class Solutions {
         return dp[n][s2];
     }
 
+    int findTargetSumWaysRecursion(int[] nums, int target) {
+        return helperTargetSum(nums, 0, 0, target);
+    }
+
+    int helperTargetSum(int[] nums, int index, int curSum, int target) {
+        // Base case: when we reach the end of the array
+        if (index == nums.length) {
+            // Check if we have reached the target sum
+            if (curSum == target) {
+                return 1; // Return 1 to indicate that we have found a valid combination
+            } else {
+                return 0; // Return 0 to indicate that we have not found a valid combination
+            }
+        }
+
+        // Recursive case: we can either add or subtract the current number to the current sum
+        int left = helperTargetSum(nums, index + 1, curSum + nums[index], target); // Add the current number to the current sum
+        int right = helperTargetSum(nums, index + 1, curSum - nums[index], target); // Subtract the current number from the current sum
+        return left + right; // Return the sum of the results obtained from the left and right subproblems
+    }
+
     // https://leetcode.com/problems/coin-change/
     // Coin Change
     int coinChange(int[] coins, int amount) {
@@ -599,6 +636,22 @@ public class Solutions {
         return dp[amount];
     }
 
+    // https://leetcode.com/problems/last-stone-weight-ii
+    // Last Stone Weight II
+    int lastStoneWeightII(int[] stones) {
+        int n = stones.length;
+        int sum = Arrays.stream(stones).sum();
+        int[] dp = new int[sum / 2 + 1];
+
+        for (int i = 1; i <= n; i++) {
+            int stone = stones[i - 1];
+            for (int j = sum / 2; j >= stone; j--) {
+                dp[j] = Math.max(dp[j], dp[j - stone] + stone);
+            }
+        }
+        return sum - 2 * dp[sum / 2];
+    }
+
     // https://leetcode.com/problems/combination-sum-iv/
     // Combination Sum IV
     int combinationSum4(int[] nums, int target) {
@@ -617,7 +670,6 @@ public class Solutions {
 
     // https://leetcode.com/problems/integer-break/
     //  Integer Break
-
     int intergerBreakWithDp(int n) {
         if (n <= 3) return n - 1;
         int[] dp = new int[n + 1];
@@ -689,30 +741,12 @@ public class Solutions {
         return dp[sum];
     }
 
-
-    // https://leetcode.com/problems/last-stone-weight-ii
-    // Last Stone Weight II
-    int lastStoneWeightII(int[] stones) {
-        int n = stones.length;
-        int sum = Arrays.stream(stones).sum();
-        int[] dp = new int[sum / 2 + 1];
-
-        for (int i = 1; i <= n; i++) {
-            int stone = stones[i - 1];
-            for (int j = sum / 2; j >= stone; j--) {
-                dp[j] = Math.max(dp[j], dp[j - stone] + stone);
-            }
-        }
-        return sum - 2 * dp[sum / 2];
-    }
-
     // Given a set of positive integers and an integer k, check if there is any non-empty subset that sums to k.
     // I/p A = { 7, 3, 2, 5, 8 } k = 14 and Output: Subset with the given sum exists Subset { 7, 2, 5 } sums to 14
     static boolean subsetSum(int[] A, int k) {
         int n = A.length;
 
-        // `T[i][j]` stores true if subset with sum `j` can be attained
-        // using items up to first `i` items
+        // `T[i][j]` stores true if subset with sum `j` can be attained using items up to first `i` items
         boolean[][] dp = new boolean[n + 1][k + 1];
 
         // if the sum is zero
@@ -813,30 +847,6 @@ public class Solutions {
         return dp[n][n];
     }
 
-    // https://leetcode.com/problems/palindromic-substrings/
-    // Palindromic Substrings
-    int countSubstrings(String s) {
-        int count = 0;
-        if (s == null || s.length() == 0)
-            return count;
-
-        for (int i = 0; i < s.length(); i++) {
-            count += findPalindroms(s, i, i);
-            count += findPalindroms(s, i, i + 1);
-        }
-        return count;
-    }
-
-    int findPalindroms(String s, int left, int right) {
-        int count = 0;
-        while (left >= 0 && right < s.length() && s.charAt(left) == s.charAt(right)) {
-            count++;
-            left--;
-            right++;
-        }
-        return count;
-    }
-
     // https://www.geeksforgeeks.org/minimum-number-deletions-make-string-palindrome
     // Minimum number of deletions to make a string palindrome
     int minimumNumberOfDeletions(String str) {
@@ -872,6 +882,21 @@ public class Solutions {
         return dp[0][n - 1];
     }
 
+    int minDeletionToPalindrome(String s) {
+        int[][] dp = new int[s.length()][s.length()];
+        for (int i = s.length() - 1; i >= 0; i--) {
+            dp[i][i] = 1;
+            for (int j = i + 1; j < s.length(); j++) {
+                if (s.charAt(i) == s.charAt(j)) {
+                    dp[i][j] = dp[i + 1][j - 1] + 2;
+                } else {
+                    dp[i][j] = Math.max(dp[i + 1][j], dp[i][j - 1]);
+                }
+            }
+        }
+        return s.length() - dp[0][s.length() - 1];
+    }
+
     // https://leetcode.com/problems/minimum-insertion-steps-to-make-a-string-palindrome/
     // Return the minimum number of steps to make s palindrome.
     int minInsertions(String s) {
@@ -885,6 +910,30 @@ public class Solutions {
         }
 
         return n - dp[n][n];
+    }
+
+    // https://leetcode.com/problems/palindromic-substrings/
+    // Palindromic Substrings
+    int countSubstrings(String s) {
+        int count = 0;
+        if (s == null || s.length() == 0)
+            return count;
+
+        for (int i = 0; i < s.length(); i++) {
+            count += findPalindroms(s, i, i);
+            count += findPalindroms(s, i, i + 1);
+        }
+        return count;
+    }
+
+    int findPalindroms(String s, int left, int right) {
+        int count = 0;
+        while (left >= 0 && right < s.length() && s.charAt(left) == s.charAt(right)) {
+            count++;
+            left--;
+            right++;
+        }
+        return count;
     }
 
     // https://leetcode.com/problems/palindrome-partitioning-ii/
@@ -1208,4 +1257,91 @@ public class Solutions {
         return dp[n][m];
     }
 
+
+    //  https://leetcode.com/problems/minimum-window-subsequence/
+    // https://www.geeksforgeeks.org/problems/minimum-window-subsequence
+    // Given strings str1 and str2, find the minimum (contiguous) substring W of str1, so that str2 is a subsequence of W.
+    String minWindow(String str1, String str2) {
+        int n = str1.length();
+        int m = str2.length();
+        int[][] dp = new int[m + 1][n + 1];
+
+        for (int j = 0; j <= m; j++) {
+            dp[0][j] = j + 1;
+        }
+
+        for (int i = 1; i <= m; i++)
+            for (int j = 1; j <= n; j++) {
+                if (str2.charAt(i - 1) == str1.charAt(j - 1)) {
+                    dp[i][j] = dp[i - 1][j - 1];
+                } else
+                    dp[i][j] = dp[i][j - 1];
+            }
+
+        int left = 0, minLen = Integer.MAX_VALUE;
+        for (int j = 1; j <= n; j++) {
+            if (dp[m][j] > 0 && j - dp[m][j] < 1 + minLen) {
+                left = dp[m][j] - 1;
+                minLen = j - dp[m][j] + 1;
+            }
+        }
+
+        return minLen == Integer.MAX_VALUE ? "" : str1.substring(left, left + minLen);
+    }
+
+    // https://leetcode.com/discuss/interview-question/algorithms/125014/microsoft-minimum-window-subsequence
+    //Given an array nums and a subsequence sub, find the shortest subarray of nums that contains sub.
+    // Input: nums = [1, 2, 3, 5, 8, 7, 6, 9, 5, 7, 3, 0, 5, 2, 3, 4, 4, 7], sub = [5, 7] and Output: start = 8, size = 2
+
+    int[] findSmallestSubstring(int[] nums, int[] sub) {
+        int n = nums.length, m = sub.length;
+        int[][] dp = new int[m + 1][n + 1];
+        for (int j = 0; j <= m; j++) {
+            dp[0][j] = j + 1;
+        }
+
+        for (int i = 1; i <= m; i++) {
+            for (int j = 1; j <= n; j++) {
+                if (sub[i - 1] == nums[j - 1])
+                    dp[i][j] = dp[i - 1][j - 1];
+                else
+                    dp[i][j] = dp[i][j - 1];
+            }
+        }
+
+        int l = 0, minLen = Integer.MAX_VALUE;
+        for (int j = 1; j <= n; j++) {
+            if (dp[m][j] >= 0 && j - dp[m][j] < 1 + minLen) {
+                l = dp[m][j] - 1;
+                minLen = j - dp[m][j] + 1;
+            }
+        }
+
+        return minLen == Integer.MAX_VALUE ? new int[]{-1, -1} : new int[]{l, minLen};
+    }
+
+    // https://leetcode.com/problems/dungeon-game
+    // Dungeon Game
+    int calculateMinimumHP(int[][] dungeon) {
+        int n = dungeon.length, m = dungeon[0].length;
+        int[][] dp = new int[n + 1][m + 1];
+        for (int[] r : dp) {
+            Arrays.fill(r, Integer.MAX_VALUE);
+        }
+
+        int princess = dungeon[n - 1][m - 1];
+        dp[n - 1][m - 1] = princess < 0 ? 1 - princess : 1;
+        for (int r = n - 1; r >= 0; r--) {
+            for (int c = m - 1; c >= 0; c--) {
+                if (r == n - 1 && c == m - 1)
+                    continue;
+                int health = Math.min(dp[r + 1][c], dp[r][c + 1]) - dungeon[r][c];
+                if (dungeon[r][c] >= dp[r + 1][c] || dungeon[r][c] >= dp[r][c + 1]) {
+                    health = 1;
+                }
+                dp[r][c] = health;
+            }
+        }
+        return dp[0][0];
+    }
 }

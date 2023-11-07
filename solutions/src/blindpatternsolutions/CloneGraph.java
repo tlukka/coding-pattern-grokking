@@ -50,23 +50,17 @@ public class CloneGraph {
 
 
     Node cloneGraphWithDfs(Node node) {
-        //step 1
         return cloneDFS(node, new HashMap<>());
     }
 
     public Node cloneDFS(Node cur, Map<Node, Node> visited) {
-        //step 2
         if (cur == null) return null;
-        //step 3
         if (visited.containsKey(cur)) return visited.get(cur);
-        //step 4
         Node newNode = new Node(cur.val);
         visited.put(cur, newNode);
-        //step 5
         for (Node n : cur.neighbors) {
             newNode.neighbors.add(cloneDFS(n, visited));
         }
-        //step 6
         return newNode;
     }
 }

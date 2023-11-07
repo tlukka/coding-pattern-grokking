@@ -56,7 +56,6 @@ public class GreedySolutions {
             }
         }
         return jums;
-
     }
 
     // Given an integer array bills where bills[i] is the bill the ith customer pays,
@@ -68,16 +67,20 @@ public class GreedySolutions {
             if (bill == 5)
                 fives++;
             else if (bill == 10) {
+                if (fives == 0)
+                    return false;
                 fives--;
                 tens++;
-            } else if (tens > 0 && fives >= 1) {
-                tens--;
-                fives--;
             } else {
-                fives -= 3;
+                if (tens > 0 && fives > 0) {
+                    tens--;
+                    fives--;
+                } else if (fives >= 3) {
+                    fives -= 3;
+                } else {
+                    return false;
+                }
             }
-            if (fives < 0)
-                return false;
         }
         return true;
     }
@@ -115,7 +118,7 @@ public class GreedySolutions {
                 candies[i] = candies[i - 1] + 1;
         }
 
-        int total = candies[ratings.length - 1];
+        int total = candies[n - 1];
         for (int i = n - 2; i >= 0; i--) {
             if (ratings[i] > ratings[i + 1])
                 candies[i] = Math.max(candies[i], candies[i + 1] + 1);

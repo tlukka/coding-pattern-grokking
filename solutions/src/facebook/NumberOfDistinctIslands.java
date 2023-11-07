@@ -229,7 +229,7 @@ public class NumberOfDistinctIslands {
         visited[0] = true;
 
         //BFS from cell number 0
-        while (queue.isEmpty() == false) {
+        while (!queue.isEmpty()) {
             vertex = queue.poll();
             int cellNum = vertex.cell;
             if (cellNum == size - 1)

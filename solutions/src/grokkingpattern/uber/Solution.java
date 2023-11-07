@@ -17,6 +17,7 @@ public class Solution {
         System.out.println(sl.minimuTimeTrips(new int[]{1, 2, 3}, 5));
     }
 
+    //https://leetcode.com/problems/minimum-time-to-complete-trips/
     long minimuTimeTrips(int[] time, int totalTrips) {
         long l = 1, r = Arrays.stream(time).min().getAsInt() * (long) totalTrips;
         while (l < r) {
@@ -58,6 +59,7 @@ public class Solution {
         return low;
     }
 
+    // https://leetcode.com/problems/numbers-with-repeated-digits/
     int numDupDigitsAtMostN(int n) {
         String str = String.valueOf(n);
         int len = str.length();
@@ -107,6 +109,7 @@ public class Solution {
         return res;
     }
 
+    //https://leetcode.com/problems/number-of-zero-filled-subarrays/
     long zeroFilledSubarray(int[] nums) {
         long ans = 0, c = 0;
         for (int i : nums) {
@@ -119,6 +122,7 @@ public class Solution {
         return ans;
     }
 
+    // https://leetcode.com/problems/text-justification/
     List<String> fullJustify(String[] words, int maxWidth) {
         List<String> result = new ArrayList<>();
         List<String> tempList = new ArrayList<>();
@@ -223,19 +227,6 @@ public class Solution {
     }
 
     // https://www.geeksforgeeks.org/find-the-minimum-cost-to-reach-a-destination-where-every-station-is-connected-in-one-direction/
-
-    int minCostByRecursion(int[][] costs, int s, int d) {
-        if (s == d || s + 1 == d)
-            return costs[s][d];
-        int min = costs[s][d];
-
-        for (int i = s + 1; i < d; i++) {
-            min = Math.min(min, minCostByRecursion(costs, s, i) + minCostByRecursion(costs, i, d));
-        }
-
-        return min;
-    }
-
     int minCostTopologicalSort(int[][] costs) {
         int[] dist = new int[costs.length];
         Arrays.fill(dist, Integer.MAX_VALUE);
@@ -271,6 +262,18 @@ public class Solution {
         }
 
         return dp[u][v];
+    }
+
+    int minCostByRecursion(int[][] costs, int s, int d) {
+        if (s == d || s + 1 == d)
+            return costs[s][d];
+        int min = costs[s][d];
+
+        for (int i = s + 1; i < d; i++) {
+            min = Math.min(min, minCostByRecursion(costs, s, i) + minCostByRecursion(costs, i, d));
+        }
+
+        return min;
     }
 
     // https://prepfortech.in/leetcode-solutions/minimum-costs-using-the-train-line/

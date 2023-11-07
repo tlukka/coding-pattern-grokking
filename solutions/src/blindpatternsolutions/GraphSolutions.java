@@ -206,12 +206,9 @@ public class GraphSolutions {
     }
 
     void dfsWaterFlow(int[][] matrix, boolean[][] oceans, int r, int c, int curr) {
-        if (r < 0 || r >= matrix.length || c < 0 || c >= matrix[0].length)
-            return;
-        if (matrix[r][c] < curr || oceans[r][c])
+        if (r < 0 || r >= matrix.length || c < 0 || c >= matrix[0].length || matrix[r][c] < curr || oceans[r][c])
             return;
         oceans[r][c] = true;
-
         dfsWaterFlow(matrix, oceans, r - 1, c, matrix[r][c]); // down
         dfsWaterFlow(matrix, oceans, r + 1, c, matrix[r][c]); // up
         dfsWaterFlow(matrix, oceans, r, c - 1, matrix[r][c]); // left

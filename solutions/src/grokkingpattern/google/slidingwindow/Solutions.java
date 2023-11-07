@@ -276,4 +276,7 @@ public class Solutions {
         }
         return list;
     }
+
+    // Given strings str1 and str2, find the minimum (contiguous) substring W of str1, so that str2 is a subsequence of W.
+    // https://anshika-bhargava0202.medium.com/leetcode-727-minimum-window-subsequence-21c40baff689
 }

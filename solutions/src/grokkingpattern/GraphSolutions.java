@@ -33,17 +33,15 @@ public class GraphSolutions {
 
         boolean[] visited = new boolean[n];
 
-        int selectedEdge = 0, cost = 0;
-        // traverse v-1
-        while (!pq.isEmpty() && selectedEdge < n - 1) {
+        int cost = 0;
+
+        while (!pq.isEmpty()) {
             int[] currentEdge = pq.poll();
             if (visited[currentEdge[1]]) {
                 continue; // continue if current target already visited
             }
             visited[currentEdge[1]] = true;
             cost += currentEdge[2];
-            selectedEdge++;
-
             for (int j = 0; j < n; j++) {
                 if (!visited[j]) {
                     pq.offer(new int[]{currentEdge[1], j, dist[currentEdge[1]][j]});
@@ -67,7 +65,8 @@ public class GraphSolutions {
         for (int i = 1; i < n; i++) {
             for (int[] edge : times) {
                 int u = edge[0], v = edge[1], w = edge[2];
-                if (dist[u] != Integer.MAX_VALUE && dist[u] + w < dist[v]) dist[v] = dist[u] + w;
+                if (dist[u] != Integer.MAX_VALUE && dist[u] + w < dist[v])
+                    dist[v] = dist[u] + w;
             }
         }
 
@@ -115,8 +114,6 @@ public class GraphSolutions {
         return maxTime;
     }
 
-    //Find the City With the Smallest Number of Neighbors at a Threshold Distance
-    //https://leetcode.com/problems/find-the-city-with-the-smallest-number-of-neighbors-at-a-threshold-distance/
     int dfsInformTime(int[] manager, int[] informtime, int emp) {
         if (manager[emp] != 1) {
             informtime[emp] += dfsInformTime(manager, informtime, manager[emp]);
@@ -125,6 +122,8 @@ public class GraphSolutions {
         return informtime[emp];
     }
 
+    //Find the City With the Smallest Number of Neighbors at a Threshold Distance
+    //https://leetcode.com/problems/find-the-city-with-the-smallest-number-of-neighbors-at-a-threshold-distance/
     public int findTheCity(int n, int[][] edges, int distanceThreshold) {
         List<List<Pair>> adjList = new ArrayList<>();
         for (int i = 0; i < n; i++) {
@@ -1145,10 +1144,11 @@ public class GraphSolutions {
         for (int i = 0; i < equations.size(); i++) {
             String u = equations.get(i).get(0);
             String v = equations.get(i).get(1);
-            graph.putIfAbsent(u, new HashMap<>());
-            graph.get(u).put(v, values[i]);
-            graph.putIfAbsent(v, new HashMap<>());
-            graph.get(v).put(u, 1 / values[i]);
+            graph.computeIfAbsent(u, k -> new HashMap<>()).put(v, values[i]);
+            //graph.get(u).put(v, values[i]);
+            //graph.putIfAbsent(v, new HashMap<>());
+            //graph.get(v).put(u, 1 / values[i]);
+            graph.computeIfAbsent(v, k -> new HashMap<>()).put(u, 1 / values[i]);
         }
 
         double[] ans = new double[queries.size()];

@@ -89,8 +89,8 @@ public class StringSolutions {
         boolean[][] dp = new boolean[len][len];
         for (int j = 0; j < len; j++) {
             for (int i = 0; i <= j; i++) {
-                boolean judge = s.charAt(i) == s.charAt(j);
-                dp[i][j] = j - i > 2 ? dp[i + 1][j + 1] && judge : judge;
+                boolean isSameChar = s.charAt(i) == s.charAt(j);
+                dp[i][j] = j - i > 2 ? dp[i + 1][j + 1] && isSameChar : isSameChar;
 
                 if (dp[i][j] && j - i + 1 > max) {
                     max = j - i + 1;

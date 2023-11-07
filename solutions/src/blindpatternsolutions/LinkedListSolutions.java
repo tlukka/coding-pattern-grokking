@@ -184,6 +184,80 @@ public class LinkedListSolutions {
         head.next = null;
         return result;
     }
+
+    //https://leetcode.com/problems/palindrome-linked-list
+    // Is Linked List Palindrome
+    boolean isPalindrome(ListNode head) {
+        ListNode slow = head, fast = head, prev, temp;
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        prev = slow;
+        slow = slow.next;
+        prev.next = null;
+
+        // reverse 2nd of list...
+        while (slow != null) {
+            temp = slow.next;
+            slow.next = prev;
+            prev = slow;
+            slow = temp;
+        }
+
+        fast = head;
+        slow = prev;
+
+        while (slow != null) {
+            if (fast.val != slow.val)
+                return false;
+            fast = fast.next;
+            slow = slow.next;
+        }
+
+        return true;
+    }
+
+    // https://leetcode.com/problems/circular-array-loop
+    //Circular Array Loop
+    boolean circularArrayLoop(int[] nums) {
+        for (int i = 0; i < nums.length; i++) {
+            float dir = Math.signum(nums[i]);
+            int slow = i;
+            int fast = i;
+            do {
+
+                slow = getNextIndex(nums, dir, slow);
+                fast = getNextIndex(nums, dir, fast);
+
+                if (fast != -1) {
+                    fast = getNextIndex(nums, dir, fast);
+                }
+                if (fast == -1 || nums[slow] == 0 || nums[fast] == 0)
+                    break;
+            } while (slow != fast);
+
+            if (slow != -1 && slow == fast)
+                return true;
+            nums[i] = 0;
+        }
+
+        return false;
+    }
+
+    int getNextIndex(int[] nums, float dir, int i) {
+        float currentDir = Math.signum(nums[i]);
+        if (currentDir * dir < 0)
+            return -1;
+
+        int n = nums.length;
+        int nxtIdx = (i + nums[i]) % n;
+        if (nxtIdx < 0)
+            nxtIdx += n;
+
+        return nxtIdx == i ? -1 : nxtIdx;
+    }
+
 }
 
 

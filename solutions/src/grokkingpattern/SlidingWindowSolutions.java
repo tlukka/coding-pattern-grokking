@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Set;
 
@@ -175,39 +174,6 @@ public class SlidingWindowSolutions {
         return maxLength;
     }
 
-    int findLengthOfLongestSubstringWithKUniqueCharacters(String s, int k) {
-        int n = s.length();
-
-        int maxLen = -1; // Stores the length of the longest substring with k unique characters found so far.
-        Map<Character, Integer> windowCharCount = new HashMap<>(); // Stores the character count for each character in the current window
-        int windowStart = 0;
-
-        for (int windowEnd = 0; windowEnd < n; windowEnd++) {
-            // Add the next character to the sliding window
-            char c = s.charAt(windowEnd);
-            windowCharCount.put(c, windowCharCount.getOrDefault(c, 0) + 1);
-
-            // Shrink the sliding window, until we have exactly 'k' distinct characters in the window
-            while (windowCharCount.size() > k) {
-                char leftChar = s.charAt(windowStart);
-
-                // Discard the character at windowStart since we're gonna move it out of the window now.
-                windowCharCount.put(leftChar, windowCharCount.get(leftChar) - 1);
-                if (windowCharCount.get(leftChar) == 0) {
-                    windowCharCount.remove(leftChar);
-                }
-
-                windowStart++; // Shrink the window
-            }
-
-            if (windowCharCount.size() == k) {
-                // Update maximum length found so far
-                maxLen = Math.max(maxLen, windowEnd - windowStart + 1);
-            }
-        }
-
-        return maxLen;
-    }
 
     String findLongestSubstringKUniqueCharacters(String str, int k) {
         if (str == null || str.length() == 0) {
@@ -230,7 +196,8 @@ public class SlidingWindowSolutions {
             freq[str.charAt(high)]++;
             // if the window size is more than `k`, remove characters from the left
             while (window.size() > k) {
-                if (--freq[str.charAt(low)] == 0) window.remove(str.charAt(low));
+                if (--freq[str.charAt(low)] == 0)
+                    window.remove(str.charAt(low));
                 low++;        // reduce window size
             }
             // update the maximum window size if necessary
@@ -253,7 +220,8 @@ public class SlidingWindowSolutions {
             while (fruitsMap.size() > 2) {
                 Integer startFruit = fruits[start];
                 fruitsMap.put(fruits[start], fruitsMap.get(startFruit) - 1);
-                if (fruitsMap.get(startFruit) == 0) fruitsMap.remove(startFruit);
+                if (fruitsMap.get(startFruit) == 0)
+                    fruitsMap.remove(startFruit);
                 start++;
             }
             maxFruitPicked = Math.max(maxFruitPicked, end - start + 1);
@@ -272,7 +240,8 @@ public class SlidingWindowSolutions {
             map.put(s.charAt(end), map.getOrDefault(s.charAt(end), 0) + 1);
             while (map.size() > 2) {
                 map.put(s.charAt(start), map.get(s.charAt(start)) - 1);
-                if (map.get(s.charAt(start)) == 0) map.remove(s.charAt(start));
+                if (map.get(s.charAt(start)) == 0)
+                    map.remove(s.charAt(start));
                 start++;
             }
             maxLength = Math.max(maxLength, end - start + 1);
@@ -300,7 +269,7 @@ public class SlidingWindowSolutions {
 
     int lengthOfLongestSubstringWithoutRepeatedChars(String s) {
         int maxLen = 0, l = 0;
-        HashSet seen = new HashSet<>();
+        HashSet<Character> seen = new HashSet<>();
         for (int i = 0; i < s.length(); i++) {
             if (!seen.contains(s.charAt(i))) {
                 maxLen = Math.max(maxLen, i - l + 1);
@@ -318,7 +287,8 @@ public class SlidingWindowSolutions {
         int maxLength = 0;
         for (int right = 0, left = 0; right < s.length(); right++) {
             int index = s.indexOf(s.charAt(right), left);
-            if (index != right) left = index + 1;
+            if (index != right)
+                left = index + 1;
             maxLength = Math.max(maxLength, right - left + 1);
         }
         return maxLength;
@@ -353,9 +323,11 @@ public class SlidingWindowSolutions {
     int longestOnes(int[] nums, int k) {
         int left = 0, maxOnes = 0, maxLength = 0;
         for (int right = 0; right < nums.length; right++) {
-            if (nums[right] == 1) maxOnes++;
-            if (right - left + 1 - maxOnes > k) {
-                if (nums[left] == 1) --maxOnes;
+            if (nums[right] == 1)
+                maxOnes++;
+            while (right - left + 1 - maxOnes > k) {
+                if (nums[left] == 1)
+                    --maxOnes;
                 left++;
             }
             maxLength = Math.max(maxLength, right - left + 1);
@@ -448,19 +420,13 @@ public class SlidingWindowSolutions {
 
         for (int i = s1.length() - 1, j = 0; i < s2.length(); i++, j++) {
             dest[s2.charAt(i) - 'a']++;
-            if (check(source, dest))
+            if (Arrays.equals(source, dest))
                 return true;
             dest[s2.charAt(j) - 'a']--;
         }
         return false;
     }
 
-    boolean check(int[] f1, int[] f2) {
-        for (int i = 0; i < f1.length; i++) {
-            if (f1[i] != f2[i]) return false;
-        }
-        return true;
-    }
 
     // Find All Anagrams in a String
     // Given two strings s and p, return an array of all the start indices of p's anagrams in s..
@@ -500,7 +466,7 @@ public class SlidingWindowSolutions {
     // Given two strings s and t of lengths m and n respectively, return the minimum window
     //substring of s such that every character in t (including duplicates) is included in the window
     String minWindow(String s, String t) {
-        if(s.length()<t.length())
+        if (s.length() < t.length())
             return "";
         HashMap<Character, Integer> freqMap = new HashMap<>();
         for (char ch : t.toCharArray())

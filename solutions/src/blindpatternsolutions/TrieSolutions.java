@@ -17,13 +17,9 @@ public class TrieSolutions {
     public void insert(String word) {
         TrieNode curr = root;
         for (char ch : word.toCharArray()) {
-            if (!curr.child.containsKey(ch)) {
-                curr.child.put(ch, new TrieNode());
-            } else {
-                curr = curr.child.get(ch);
-            }
+            curr.child.putIfAbsent(ch, new TrieNode());
+            curr = curr.child.get(ch);
         }
-
         curr.isEnd = true;
         root = curr;
     }

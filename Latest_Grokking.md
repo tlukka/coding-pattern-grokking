@@ -5,8 +5,6 @@ Tracking checkboxes can be used by forking this repository and marking an X insi
 ## Sliding Window
 - [ ] [Find Maximum in Sliding Window](https://leetcode.com/problems/sliding-window-maximum/)
 
-- [ ] [Minimum Window Subsequence](https://leetcode.com/problems/minimum-window-substring/)
-
 - [ ] [Repeated DNA Sequences](https://leetcode.com/problems/repeated-dna-sequences/)
 
 - [ ] [Minimum Window Substring](https://leetcode.com/problems/minimum-window-substring/)
@@ -47,8 +45,13 @@ Tracking checkboxes can be used by forking this repository and marking an X insi
 - [ ] [Interval List Intersections](https://leetcode.com/problems/interval-list-intersections/)
 
 - [ ] [Employee Free Time](https://leetcode.com/problems/employee-free-time/)
+- [ ] [Employee Free time](https://algo.monster/liteproblems/759)
+- [ ] [Employee Free time](https://tutorialcup.com/leetcode-solutions/employee-free-time-leetcode-solution.htm)
 
 - [ ] [Meeting Rooms II](https://leetcode.com/problems/meeting-rooms-ii/)
+- [ ] [Meeting Rooms II](https://github.com/Seanforfun/Algorithm-and-Leetcode/blob/master/leetcode/253.%20Meeting%20Rooms%20II.md)
+- [ ] [Meeting Rooms II](https://algo.monster/liteproblems/253)
+
 
 ## In-place Reversal of a Linked List
 
@@ -171,6 +174,9 @@ Tracking checkboxes can be used by forking this repository and marking an X insi
 - [ ] [Minimum Number of Refueling Stops](https://leetcode.com/problems/minimum-number-of-refueling-stops/)
 
 - [ ] [Climbing Stairs](https://leetcode.com/problems/climbing-stairs/)
+
+- [ ] [Minimum Window Subsequence](https://leetcode.com/problems/minimum-window-subsequence/)
+
 
 ## Cyclic Sort
 
